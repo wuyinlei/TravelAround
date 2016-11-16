@@ -10,7 +10,21 @@ android {
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+
+
+        //使用Jack编译器
+        jackOptions {
+            enabled true
+        }
     }
+
+    //使用Java1.8
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+
+
     buildTypes {
         release {
             minifyEnabled false
@@ -20,10 +34,27 @@ android {
 }
 
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
+    compile fileTree(include: ['*.jar'], dir: 'libs')
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
     compile 'com.android.support:appcompat-v7:25.0.0'
     testCompile 'junit:junit:4.12'
+    //网络请求框架
+    compile 'com.lzy.net:okgo:2.0.0'
+    compile 'com.lzy.net:okserver:1.1.0'
+    compile 'com.lzy.net:okrx:0.1.0'
+    compile 'com.lzy.net:okrx:0.1.0'
+    compile 'com.android.support:recyclerview-v7:25.0.0'
+    compile 'com.android.support:cardview-v7:25.0.0'
+    compile 'com.android.support:design:25.0.0'
+    //图片加载框架
+    compile 'com.github.bumptech.glide:glide:3.7.0'
+    //gson解析
+    compile 'com.google.code.gson:gson:2.7'
+    compile files('libs/nineoldandroids-2.4.0.jar')
+
+
+
+    compile 'com.zhy:base-adapter:2.0.0'
 }
