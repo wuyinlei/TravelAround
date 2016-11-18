@@ -68,8 +68,8 @@ public class MainActivity extends AppCompatActivity implements FragmentCallback 
         Tab cart = new Tab(R.string.mine, R.drawable.selector_mine, MineFragment.class);
 
         mTabs.add(home);
-        mTabs.add(category);
         mTabs.add(hot);
+        mTabs.add(category);
         mTabs.add(cart);
 
         mInflater = LayoutInflater.from(this);

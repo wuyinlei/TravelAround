@@ -14,6 +14,7 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.renren.ruolan.travelaround.R;
 import com.renren.ruolan.travelaround.cn.sharesdk.onekeyshare.OnekeyShare;
 import com.renren.ruolan.travelaround.utils.DataCleanManager;
@@ -173,7 +174,7 @@ public class MineFragment extends Fragment implements View.OnClickListener {
 
             case R.id.clear_cache:
                 DataCleanManager.clearAllCache(getActivity());  //清理app缓存
-                new MaterialDialog.Builder(this)
+                new MaterialDialog.Builder(getActivity())
                         .title(getResources().getString(R.string.clear_tip))
                         .content(getResources().getString(R.string.clear_success))
                         .positiveText(getResources().getString(R.string.ok))

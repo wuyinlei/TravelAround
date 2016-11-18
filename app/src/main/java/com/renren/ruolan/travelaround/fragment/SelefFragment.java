@@ -1,6 +1,7 @@
 package com.renren.ruolan.travelaround.fragment;
 
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -17,11 +18,13 @@ import com.lzy.okgo.convert.StringConvert;
 import com.lzy.okrx.RxAdapter;
 import com.renren.ruolan.travelaround.R;
 import com.renren.ruolan.travelaround.adapter.SelefHotelAdapter;
+import com.renren.ruolan.travelaround.constant.Contants;
 import com.renren.ruolan.travelaround.constant.HttpUrlPath;
 import com.renren.ruolan.travelaround.entity.CityId;
 import com.renren.ruolan.travelaround.entity.SelefHotelData;
 import com.renren.ruolan.travelaround.entity.SelefHotelData.ResultEntity.ProductListEntity;
 import com.renren.ruolan.travelaround.event.CityIdEvent;
+import com.renren.ruolan.travelaround.ui.ProductDetailActivity;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
@@ -88,6 +91,18 @@ public class SelefFragment extends Fragment {
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
         mHotelAdapter = new SelefHotelAdapter(mProductListEntities, getActivity());
         mRecyclerView.setAdapter(mHotelAdapter);
+        mHotelAdapter.setOnItemClick(new SelefHotelAdapter.OnItemClick() {
+            @Override
+            public void OnItemClickListener(View view, int position, ProductListEntity bean) {
+                String Platform = "1";
+                String ProductID = mProductListEntities.get(position).getProductID();
+                Intent intent = new Intent(getActivity(), ProductDetailActivity.class);
+                intent.putExtra(Contants.PLATFORM,Platform);
+                intent.putExtra(Contants.PRODUCT_ID,ProductID);
+                intent.putExtra(Contants.CITY_NAME,cityName);
+                startActivity(intent);
+            }
+        });
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
