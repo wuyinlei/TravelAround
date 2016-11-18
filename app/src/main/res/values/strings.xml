@@ -15,13 +15,51 @@
     <string name="smoothlistview_footer_hint_normal">查看更多</string>
     <string name="smoothlistview_footer_hint_ready">松开载入更多</string>
 
-    <string name="beijing">北京</string>
     <string name="recomment">推荐</string>
     <string name="hot">热门</string>
     <string name="scenic">景点</string>
     <string name="wine_scenic">酒+景</string>
-    
-    
+
+
     <string name="sell_count">已售</string>
+
+
+    <string name="beijing">北京</string>
+    <string name="shanghai">上海</string>
+    <string name="guangzhou">广州</string>
+    <string name="shengzhen">深圳</string>
+    <string name="tianjin">天津</string>
+    <string name="updating">更新中。。。</string>
+    <string name="input_correct_key">您输入的关键字有误，请重新输入！</string>
+    <string name="loading_finish">加载完成</string>
+    <string name="register_loading">正在注册中...</string>
+    <string name="loading">加载中...</string>
+
+
+
+    <string name="sorry_not_find">抱歉，未能找到结果</string>
+
+    <string name="tag_text">tag</string>
+    
+    <string name="available_coupons">可用优惠券</string>
+    <string name="no_available_coupons">可用优惠券</string>
+
+
+
+    <string name="phone_num_is_not_empty">手机号不能为空</string>
+    <string name="phone_num_length_is_error">手机号码长度不对</string>
+    <string name="check_your_phone_format">请检查您的手机号格式是否正确</string>
+    <string name="register_success">注册成功</string>
+    <string name="please_insert_sd_card">请确认已经插入SD卡</string>
+
+    <string name="agree_user_argument">请同意用户协议</string>
+    <string name="register_failed">注册失败</string>
+    <string name="setting">用户管理</string>
+    <string name="collect_failed">收藏成功</string>
+    <string name="collect_success">收藏成功</string>
+
+    <string name="clear_success">清理成功</string>
+    <string name="clear_tip">提示</string>
+    <string name="ok">确定</string>
 
 </resources>

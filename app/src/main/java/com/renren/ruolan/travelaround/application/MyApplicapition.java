@@ -2,10 +2,14 @@ package com.renren.ruolan.travelaround.application;
 
 import android.app.Application;
 
+import com.baidu.mapapi.SDKInitializer;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.cache.CacheEntity;
 import com.lzy.okgo.cache.CacheMode;
 import com.lzy.okgo.cookie.store.PersistentCookieStore;
+import com.renren.ruolan.travelaround.db.DBManager;
+
+import cn.bmob.v3.Bmob;
 
 /**
  * Created by Administrator on 2016/11/16.
@@ -21,12 +25,28 @@ public class MyApplicapition extends Application {
         return mInstance;
     }
 
+    private DBManager dbManager;
+
     @Override
     public void onCreate() {
         super.onCreate();
 
         mInstance = this;
 
+
+        dbManager = new DBManager(getApplicationContext());
+        dbManager.openDatabase();
+
+
+        Bmob.initialize(this, "c4527755a846ac81c68a546c6b35cc16");
+
+        initOkgo();
+    }
+
+    /**
+     * okgo网络配置
+     */
+    private void initOkgo() {
         OkGo.init(this);
 
         //以下设置的所有参数是全局参数,同样的参数可以在请求的时候再设置一遍,那么对于该请求来讲,请求中的参数会覆盖全局参数
@@ -69,8 +89,19 @@ public class MyApplicapition extends Application {
             //这两行同上,不需要就不要传
             // .addCommonHeaders(headers)                                         //设置全局公共头
             // .addCommonParams(params);                                          //设置全局公共参数
+
+            initBaiduMap();
+
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    /**
+     * 百度地图初始化
+     */
+    private void initBaiduMap() {
+        //初始化
+        SDKInitializer.initialize(this);
     }
 }

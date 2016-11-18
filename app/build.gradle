@@ -3,6 +3,11 @@ apply plugin: 'com.android.application'
 android {
     compileSdkVersion 25
     buildToolsVersion "25.0.0"
+
+   // // **兼容Android6.0系统所需，如果这句话报错，可在dependencies标签下使用compile 'cn.bmob.android:http-legacy:1.0'**
+    useLibrary 'org.apache.http.legacy'
+
+
     defaultConfig {
         applicationId "com.renren.ruolan.travelaround"
         minSdkVersion 15
@@ -10,7 +15,6 @@ android {
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
-
 
         //使用Jack编译器
         jackOptions {
@@ -30,6 +34,12 @@ android {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
+    }
+}
+
+repositories {
+    flatDir {
+        dirs 'libs' //就是你放aar的目录地址
     }
 }
 
@@ -53,8 +63,27 @@ dependencies {
     //gson解析
     compile 'com.google.code.gson:gson:2.7'
     compile files('libs/nineoldandroids-2.4.0.jar')
-
-
-
     compile 'com.zhy:base-adapter:2.0.0'
+    compile files('libs/baidumapapi_base_v4_1_1.jar')
+    compile 'org.greenrobot:eventbus:3.0.0'
+    compile 'com.hymane.expandtextview:library:1.0.1'
+    //以下SDK开发者请根据需要自行选择
+    //bmob-sdk：Bmob的android sdk包，包含了Bmob的数据存储、文件等服务，以下是最新的bmob-sdk:
+    //3.5.0：请务必查看下面注释[1]
+    //compile 'cn.bmob.android:bmob-sdk:3.5.0'
+    //如果你想应用能够兼容Android6.0，请添加此依赖(org.apache.http.legacy.jar)
+    //  compile 'cn.bmob.android:http-legacy:1.0'
+    compile files('libs/BmobSDK_3.5.1_20160719.jar')
+    compile files('libs/MobCommons-2016.1012.1447.jar')
+    //你的其他依赖
+    compile name: 'SMSSDK-2.1.2', ext: 'aar'
+    compile name: 'SMSSDKGUI-2.1.2', ext: 'aar'
+    compile files('libs/MobCommons-2016.1107.1809.jar')
+    compile files('libs/BmobSDK_3.5.3_20161116.jar')
+
+    //dialog相关
+    compile 'com.afollestad.material-dialogs:commons:0.9.0.2'
+
+
+    compile 'com.github.clans:fab:1.6.4'
 }
