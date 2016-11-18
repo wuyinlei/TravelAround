@@ -3,12 +3,51 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:fab="http://schemas.android.com/tools"
-    android:id="@+id/activity_product_detail"
+    android:id="@+id/activity_product"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <RelativeLayout
+        android:id="@+id/re_ll"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="@color/gray">
+
+        <ImageView
+            android:id="@+id/img_back"
+            android:layout_centerVertical="true"
+            android:layout_alignParentLeft="true"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="8dp"
+            android:background="@drawable/info_back_bg"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal|center_vertical"
+            android:text="商品详情"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:textColor="@color/white"
+            android:textSize="@dimen/x18"/>
+
+        <ImageView
+            android:layout_centerVertical="true"
+            android:layout_alignParentRight="true"
+            android:id="@+id/img_share"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:layout_gravity="center_vertical|right"
+            android:layout_marginRight="8dp"
+            android:background="@drawable/info_share_bg"/>
+
+    </RelativeLayout>
+
     <com.renren.ruolan.travelaround.widget.PullUpToLoadMore
         android:id="@+id/top_scroll_view"
+        android:layout_below="@+id/re_ll"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
@@ -284,36 +323,7 @@
 
     </com.renren.ruolan.travelaround.widget.PullUpToLoadMore>
 
-    <FrameLayout
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:background="@color/gray">
 
-        <ImageView
-            android:id="@+id/img_back"
-            android:layout_width="35dp"
-            android:layout_height="35dp"
-            android:layout_gravity="center_vertical"
-            android:layout_marginLeft="8dp"
-            android:background="@drawable/info_back_bg"/>
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal|center_vertical"
-            android:text="商品详情"
-            android:textColor="@color/white"
-            android:textSize="@dimen/x18"/>
-
-        <ImageView
-            android:id="@+id/img_share"
-            android:layout_width="35dp"
-            android:layout_height="35dp"
-            android:layout_gravity="center_vertical|right"
-            android:layout_marginRight="8dp"
-            android:background="@drawable/info_share_bg"/>
-
-    </FrameLayout>
 
     <FrameLayout
         android:layout_width="wrap_content"

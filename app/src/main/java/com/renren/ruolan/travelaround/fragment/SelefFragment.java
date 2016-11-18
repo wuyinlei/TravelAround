@@ -71,18 +71,21 @@ public class SelefFragment extends Fragment {
 
     private void initData() {
         OkGo.get(HttpUrlPath.GET_HOTEL_INFO)
-                .params("CityID",cityID)
+                .params("CityID", cityID)
                 .getCall(StringConvert.create(), RxAdapter.<String>create())
-                .doOnSubscribe(()->{})
+                .doOnSubscribe(() -> {
+                })
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(s->{
-                    Type type = new TypeToken<SelefHotelData>(){}.getType();
-                    SelefHotelData data = new Gson().fromJson(s,type);
+                .subscribe(s -> {
+                    Type type = new TypeToken<SelefHotelData>() {
+                    }.getType();
+                    SelefHotelData data = new Gson().fromJson(s, type);
                     mProductListEntities = data.getResult().getProductList();
-                    if (mProductListEntities.size()>0){
+                    if (mProductListEntities.size() > 0) {
                         mHotelAdapter.setResultsBeen(mProductListEntities);
                     }
-                },throwable -> {});
+                }, throwable -> {
+                });
     }
 
     private void initView(View view) {
@@ -97,9 +100,9 @@ public class SelefFragment extends Fragment {
                 String Platform = "1";
                 String ProductID = mProductListEntities.get(position).getProductID();
                 Intent intent = new Intent(getActivity(), ProductDetailActivity.class);
-                intent.putExtra(Contants.PLATFORM,Platform);
-                intent.putExtra(Contants.PRODUCT_ID,ProductID);
-                intent.putExtra(Contants.CITY_NAME,cityName);
+                intent.putExtra(Contants.PLATFORM, Platform);
+                intent.putExtra(Contants.PRODUCT_ID, ProductID);
+                intent.putExtra(Contants.CITY_NAME, cityName);
                 startActivity(intent);
             }
         });
@@ -110,7 +113,34 @@ public class SelefFragment extends Fragment {
         if (event != null) {
             cityID = event.cityID;
             cityName = event.cityName;
+            initData(cityID, cityName);
         }
+    }
+
+    /**
+     * 重新请求数据
+     *
+     * @param cityID
+     * @param cityName
+     */
+    private void initData(String cityID, String cityName) {
+        OkGo.get(HttpUrlPath.GET_HOTEL_INFO)
+                .params("CityID", cityID)
+                .getCall(StringConvert.create(), RxAdapter.<String>create())
+                .doOnSubscribe(() -> {
+                })
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(s -> {
+                    Type type = new TypeToken<SelefHotelData>() {
+                    }.getType();
+                    SelefHotelData data = new Gson().fromJson(s, type);
+                    mProductListEntities.clear();
+                    mProductListEntities = data.getResult().getProductList();
+                    if (mProductListEntities.size() > 0) {
+                        mHotelAdapter.setResultsBeen(mProductListEntities);
+                    }
+                }, throwable -> {
+                });
     }
 
 }

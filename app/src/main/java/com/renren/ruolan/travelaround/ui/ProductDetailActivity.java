@@ -37,6 +37,7 @@ import com.renren.ruolan.travelaround.entity.DetailBean.ResultEntity.OtherInfoEn
 import com.renren.ruolan.travelaround.entity.DetailBean.ResultEntity.TagListEntity;
 import com.renren.ruolan.travelaround.entity.MoreDataDetail;
 import com.renren.ruolan.travelaround.entity.MoreDataDetail.ResultEntity.DetailListEntity;
+import com.renren.ruolan.travelaround.widget.CustomPrograss;
 import com.renren.ruolan.travelaround.widget.PullUpToLoadMore;
 import com.renren.ruolan.travelaround.widget.carousel.FlyBannerSecond;
 import com.renren.ruolan.travelaround.widget.tag.TagBaseAdapter;
@@ -79,6 +80,7 @@ public class ProductDetailActivity extends BaseActivity implements View.OnClickL
     private RecyclerView mDetailRecyclerView;
     private FlyBannerSecond mFlyBannerSecond;
     private FloatingActionButton mFabCollect, mFabUp;
+    private RelativeLayout mActivityProduct;
 
     private ImageView mImgShare, mImgBack;
 
@@ -119,6 +121,8 @@ public class ProductDetailActivity extends BaseActivity implements View.OnClickL
         super.initData();
 
 
+        CustomPrograss.show(this,getResources().getString(R.string.loading),false,null);
+
         OkGo.post(HttpUrlPath.HOME_DETAIL_URL)
                 .params("Platform", Platform)
                 .params("ProductID", ProductID)
@@ -134,6 +138,10 @@ public class ProductDetailActivity extends BaseActivity implements View.OnClickL
                     if (bean.getStatus().equals("0")) {
                         mResultEntities = bean.getResult();
                         if (mResultEntities != null) {
+                            mActivityProduct.setVisibility(View.VISIBLE);
+
+                            CustomPrograss.disMiss();
+
                             mImageLists = mResultEntities.getImgList();
                             //设置图片
                             if (mImageLists.size() > 0) {
@@ -218,12 +226,14 @@ public class ProductDetailActivity extends BaseActivity implements View.OnClickL
     @Override
     public void initView() {
 
+
+
         Platform = getIntent().getStringExtra(Contants.PLATFORM);
         ProductID = getIntent().getStringExtra(Contants.PRODUCT_ID);
         CityName = getIntent().getStringExtra(Contants.CITY_NAME);
 
-
-        mActivityProductDetail = (RelativeLayout) findViewById(R.id.activity_product_detail);
+        mActivityProduct = (RelativeLayout) findViewById(R.id.activity_product);
+        mActivityProduct.setVisibility(View.INVISIBLE);
         mTopScrollView = (PullUpToLoadMore) findViewById(R.id.top_scroll_view);
         mTvPrice = (TextView) findViewById(R.id.tv_price);
         mTvName = (TextView) findViewById(R.id.tv_name);

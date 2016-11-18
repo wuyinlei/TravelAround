@@ -42,7 +42,9 @@ import com.renren.ruolan.travelaround.constant.HttpUrlPath;
 import com.renren.ruolan.travelaround.entity.HomeData;
 import com.renren.ruolan.travelaround.entity.HomeData.ResultEntity.BannerListEntity;
 import com.renren.ruolan.travelaround.entity.HomeData.ResultEntity.CityListEntity;
+import com.renren.ruolan.travelaround.widget.CustomPrograss;
 import com.renren.ruolan.travelaround.widget.SimpleViewPagerIndicator;
+import com.renren.ruolan.travelaround.widget.StickyNavLayout;
 import com.renren.ruolan.travelaround.widget.carousel.FlyBanner;
 
 import org.greenrobot.eventbus.EventBus;
@@ -70,6 +72,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
     private RecyclerView recyclerView;
     private SimpleViewPagerIndicator indicator;
     private ViewPager viewpager;
+    private StickyNavLayout mStickyNavLayout;
 
     private ImageView ivAddress;
     private TextView tvAddress;
@@ -139,6 +142,8 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
     }
 
     private void initView(View view) {
+        mStickyNavLayout = (StickyNavLayout) view.findViewById(R.id.stick_nav_layout);
+        mStickyNavLayout.setVisibility(View.INVISIBLE);
         idStickynavlayoutTopview = (LinearLayout) view.findViewById(R.id.id_stickynavlayout_topview);
         flyBanner = (FlyBanner) view.findViewById(R.id.fly_banner);
         recyclerView = (RecyclerView) view.findViewById(R.id.recycler_view);
@@ -205,6 +210,10 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
     }
 
     private void initData() {
+
+        CustomPrograss.show(getActivity(),
+                getActivity().getResources().getString(R.string.loading),false,null);
+
         OkGo.post(HttpUrlPath.HOME_DATA)
                 .tag(this)
                 .params("CityName", getActivity().getResources().getString(R.string.beijing))
@@ -216,6 +225,11 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
                         }.getType();
                         HomeData homeData = new Gson().fromJson(s, type);
                         if (homeData.getStatus().equals("0")) {
+
+                            mStickyNavLayout.setVisibility(View.VISIBLE);
+                            CustomPrograss.disMiss();
+
+
                             mBannerListEntities = homeData.getResult().getBannerList();
                             mCityListEntities = homeData.getResult().getCityList();
                             if (mCityListEntities.size() > 0) {
@@ -291,6 +305,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
                         }.getType();
                         HomeData homeData = new Gson().fromJson(s, type);
                         if (homeData.getStatus().equals("0")) {
+                            mStickyNavLayout.setVisibility(View.VISIBLE);
                             mBannerListEntities.clear();
                             mCityListEntities.clear();
                             mBannerListEntities = homeData.getResult().getBannerList();

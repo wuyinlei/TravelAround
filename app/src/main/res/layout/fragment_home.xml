@@ -47,11 +47,11 @@
                 android:background="@drawable/home_search_icon"/>
 
             <EditText
-                android:background="@null"
-                android:layout_gravity="center"
                 android:id="@+id/editText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:background="@null"
                 android:gravity="center|left"
                 android:hint="这个周末想玩点什么"
                 android:textColorHint="@color/white"
@@ -72,6 +72,7 @@
 
 
     <com.renren.ruolan.travelaround.widget.StickyNavLayout
+        android:id="@+id/stick_nav_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
