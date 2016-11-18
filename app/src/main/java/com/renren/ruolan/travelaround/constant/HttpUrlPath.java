@@ -22,6 +22,17 @@ public class HttpUrlPath {
     //继续滑动得到更多信息  ProductID
     public static String  GET_CITY_MORE_INFO= "http://api.hifangjia.com/Detail/Single/V1903GetDetailInfo.aspx";
 
-    //城市列表id  获取酒店信息
+    //城市列表id  获取酒店信息    CurrentPage
     public static String GET_HOTEL_INFO = "http://api.hifangjia.com/Home/V18/V1801GetProListByCityID.aspx";
+
+
+    //http://api.hifangjia.com/Home/V18/V1901Ticket1.aspx   发现界面   SelectCity 北京  CityName  北京
+
+    //http://api.hifangjia.com/Article/V1902GetArticleList.aspx    currentPage  1   CityName  发现界面  下面数据
+
+    //http://fjapi.chufadian.com/Html5/AticleDetail.aspx?id=60  发现下面数据详情
+
+    //参数Platform    CurrentPage   CityName   ProvinceID   (Latitude   Longitude)   ClassID
+    //http://api.hifangjia.com/Home/V18/V1801GetProListByClassID.aspx   tab详情
+
 }
