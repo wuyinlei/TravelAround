@@ -19,8 +19,6 @@
     </style>
 
 
-
-
     <!-- 自定义Dialog -->
     <style name="Custom_Progress" parent="@android:style/Theme.Dialog">
         <item name="android:windowFrame">@null</item>
@@ -71,13 +69,5 @@
 
     </style>
 
-
-    <style name="line_horizontal" parent="line">
-        <item name="android:layout_width">1dp</item>
-        <item name="android:layout_height">fill_parent</item>
-
-        <item name="android:layout_gravity">center_horizontal</item>
-
-    </style>
 
 </resources>

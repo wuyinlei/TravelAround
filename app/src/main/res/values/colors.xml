@@ -6,6 +6,7 @@
     <color name="divider">#E5E5E5</color>
     <color name="white">#FFFFFF</color>
     <color name="bg_color">#f1f1f1</color>
+    <color name="text_color_lightblack">#959595</color>
 
 
     <color name="home_bg_title">#0E0E10</color>
@@ -24,11 +25,9 @@
     <color name="text_color_chengse">#FF8472</color>
     <color name="green_btn_color_pressed">#ff298409</color>
     <color name="text_color_2">#ff666666</color>
-    <color name="app_green_alpha">#7f45c01a</color>
-    <item type="color" name="green_btn_color_normal">@color/app_green</item>
-    <color name="app_green">#ff45c01a</color>
+    <color name="green_btn_color_normal">#ff45c01a</color>
 
-    <item name="green_btn_color_disable" type="color">@color/app_green_alpha</item>
+    <color name="green_btn_color_disable">#7f45c01a</color>
     <color name="border_color">#a9b7b7</color>
 
     <color name="app_bg">#fff7f7f7</color>
@@ -40,7 +39,6 @@
     <color name="black">#000000</color>
 
     <color name="home_recomment_title_color">#7D7D7D</color>
-    <color name="text_color_lightblack"/>
 
     <color name="grey_btn_color_normal">#fff1f1f1</color>
 </resources>

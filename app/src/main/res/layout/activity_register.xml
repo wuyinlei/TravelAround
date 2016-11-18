@@ -119,8 +119,6 @@
 
                 />
 
-            <View
-                style="@style/line_horizontal"/>
 
             <ruolan.com.myhearts.widget.ClearEditText
                 android:id="@+id/edittxt_phone"
@@ -160,8 +158,6 @@
 
                 />
 
-            <View
-                style="@style/line_horizontal"/>
 
             <ruolan.com.myhearts.widget.ClearEditText
                 android:id="@+id/edittxt_pwd"

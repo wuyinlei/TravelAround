@@ -227,7 +227,7 @@ public class PreferencesUtils {
      * 保存用户选择的城市
      */
     public static void saveCityName(Context context, String cityName) {
-        PreferenceManager.getDefaultSharedPreferences(context).edit().putString("cityName", cityName).commit();
+        PreferenceManager.getDefaultSharedPreferences(context).edit().putString("cityName", cityName).apply();
     }
 
     public static String getCityName(Context context) {
@@ -238,7 +238,7 @@ public class PreferencesUtils {
      * 保存用户选择的城市
      */
     public static void saveSlognName(Context context, String slognName) {
-        PreferenceManager.getDefaultSharedPreferences(context).edit().putString("slognName", slognName).commit();
+        PreferenceManager.getDefaultSharedPreferences(context).edit().putString("slognName", slognName).apply();
     }
 
     public static String getSlognName(Context context) {
