@@ -18,117 +18,18 @@
             android:textSize="@dimen/x22"/>
     </RelativeLayout>
 
-    <LinearLayout
-        android:id="@+id/ll"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+    <android.support.v7.widget.RecyclerView
         android:layout_below="@+id/re_title"
-        android:orientation="vertical">
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="4"
-            android:orientation="horizontal">
-
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:orientation="vertical">
-
-                <ImageView
-                    android:id="@+id/img"
-                    android:layout_width="@dimen/x50"
-                    android:layout_height="@dimen/x50"
-                    android:background="@drawable/index_in_gongyuan"
-                    />
-
-                <TextView
-                    android:id="@+id/tv_title"
-                    android:layout_width="@dimen/x50"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@+id/img"
-                    android:layout_marginTop="@dimen/x10"
-                    android:gravity="center"
-                    android:text="游山水"/>
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:orientation="vertical">
-
-                <ImageView
-                    android:layout_width="@dimen/x50"
-                    android:layout_height="@dimen/x50"
-                    android:background="@drawable/index_in_gongyuan"
-                    />
-
-                <TextView
-                    android:layout_width="@dimen/x60"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/x10"
-                    android:gravity="center"
-                    android:text="游山水"/>
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:orientation="vertical">
-
-                <ImageView
-                    android:layout_width="@dimen/x50"
-                    android:layout_height="@dimen/x50"
-                    android:background="@drawable/index_in_gongyuan"
-                    />
-
-                <TextView
-                    android:layout_width="@dimen/x50"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/x10"
-                    android:gravity="center"
-                    android:text="游山水"/>
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:orientation="vertical">
-
-                <ImageView
-                    android:layout_width="@dimen/x50"
-                    android:layout_height="@dimen/x50"
-                    android:background="@drawable/index_in_gongyuan"
-                    />
-
-                <TextView
-                    android:layout_width="@dimen/x50"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/x10"
-                    android:gravity="center"
-                    android:text="游山水"/>
-            </LinearLayout>
-
-
-        </LinearLayout>
-
-
-
-    </LinearLayout>
+        android:id="@+id/recycler_view_tag"
+        android:layout_centerVertical="true"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
 
     <android.support.v7.widget.RecyclerView
+        android:layout_marginTop="@dimen/x10"
         android:id="@+id/recycler_view_detail"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/ll"/>
+        android:layout_below="@+id/recycler_view_tag"/>
 
 </RelativeLayout>

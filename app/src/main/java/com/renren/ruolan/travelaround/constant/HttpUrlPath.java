@@ -28,7 +28,11 @@ public class HttpUrlPath {
 
     //http://api.hifangjia.com/Home/V18/V1901Ticket1.aspx   发现界面   SelectCity 北京  CityName  北京
 
+    public static String GET_HOME_TAG = "http://api.hifangjia.com/Home/V18/V1901Ticket1.aspx";
+
     //http://api.hifangjia.com/Article/V1902GetArticleList.aspx    currentPage  1   CityName  发现界面  下面数据
+
+    public static String GET_HOME_ARTICLE_LIST = "http://api.hifangjia.com/Article/V1902GetArticleList.aspx";
 
     //http://fjapi.chufadian.com/Html5/AticleDetail.aspx?id=60  发现下面数据详情
 

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="180dp">
+
+    <ImageView
+        android:id="@+id/img"
+        android:scaleType="fitXY"
+        android:layout_width="match_parent"
+        android:layout_height="180dp"/>
+
+
+    <TextView
+        android:id="@+id/tv_title"
+        android:textColor="@color/white"
+        android:textSize="18sp"
+        android:visibility="gone"
+        android:text="我是一个来自北方的狼"
+        android:layout_centerVertical="true"
+        android:layout_centerHorizontal="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+</RelativeLayout>
