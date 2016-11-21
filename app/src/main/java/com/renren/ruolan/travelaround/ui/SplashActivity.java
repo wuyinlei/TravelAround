@@ -72,6 +72,7 @@ public class SplashActivity extends BaseActivity {
 
         location();
 
+
         //mReBg = (RelativeLayout) findViewById(R.id.activity_splash);
 
         View target = findViewById(R.id.activity_splash);
@@ -237,6 +238,7 @@ public class SplashActivity extends BaseActivity {
                     sb.append(p.getId() + " " + p.getName() + " " + p.getRank());
                 }
             }
+           // Log.d("wuhaolong", cityName);
             Log.d("BaiduLocationApiDem", sb.toString());
            // BitmapDescriptor bitmapDescriptor = BitmapDescriptorFactory.fromResource(R.mipmap.icon_gcoding);
             //创建一个图层选项

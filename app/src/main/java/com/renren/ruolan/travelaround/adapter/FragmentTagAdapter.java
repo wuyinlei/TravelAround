@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.renren.ruolan.travelaround.R;
@@ -57,11 +58,26 @@ public class FragmentTagAdapter extends RecyclerView.Adapter<FragmentTagAdapter.
 
         private ImageView mImg;
         private TextView mTv;
+        private RelativeLayout mReTitle;
 
         public TagViewHolder(View itemView) {
             super(itemView);
             mImg = (ImageView) itemView.findViewById(R.id.img);
             mTv = (TextView) itemView.findViewById(R.id.tv_title);
+            mReTitle = (RelativeLayout) itemView.findViewById(R.id.re_title);
+            if (mOnItemClick != null){
+                mReTitle.setOnClickListener(view -> mOnItemClick.OnItemClickListener(view,getLayoutPosition(),mDisvoceries.get(getLayoutPosition())));
+            }
         }
+    }
+
+    private OnItemClick mOnItemClick;
+
+    public void setOnItemClick(OnItemClick onItemClick) {
+        mOnItemClick = onItemClick;
+    }
+
+    public interface  OnItemClick {
+        void OnItemClickListener(View v ,int position,Disvocery disvocery);
     }
 }

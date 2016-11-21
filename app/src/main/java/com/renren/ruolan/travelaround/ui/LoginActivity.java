@@ -11,6 +11,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 
 import com.renren.ruolan.travelaround.BaseActivity;
@@ -71,20 +72,20 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
     public void initData() {
         mUserName = PreferencesUtils.getString(this, Contants.USER_NAME);
         mPassWord = PreferencesUtils.getString(this, Contants.USER_PASSWORD);
-        if (!TextUtils.isEmpty(mUserName)) {
+        if (mUserName != null) {
             mEtPhone.setText(mUserName);
         }
-        if (!TextUtils.isEmpty(mPassWord)) {
+        if (mPassWord != null) {
             mEtPassword.setText(mPassWord);
         }
 
-        mName = mEtPhone.getText().toString().trim();
+        mName = mEtPhone.getText().toString();
 //        if (!RegularUtils.isMobileExact(name)){
 //            Toast.makeText(this, getResources().getString(R.string.is_not_phone), Toast.LENGTH_SHORT).show();
 //            return;
 //        }
 
-        mPwd = mEtPassword.getText().toString().trim();
+        mPwd = mEtPassword.getText().toString();
 
         // toLogin(name,pwd);
 
@@ -100,41 +101,58 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
         final BmobUser bmobUser = new BmobUser();
         bmobUser.setUsername(name);
         bmobUser.setPassword(pwd);
-
-        bmobUser.loginObservable(BmobUser.class).subscribe(new Subscriber<BmobUser>() {
+        
+        bmobUser.login(new SaveListener<MyUser>() {
             @Override
-            public void onCompleted() {
-//                Toast.makeText(LoginActivity.this,
-//                        getResources().getString(R.string.login_success),
-//                        Toast.LENGTH_SHORT).show();
-            }
+            public void done(MyUser myUser, BmobException e) {
+                if (e == null){
+                    Toast.makeText(LoginActivity.this,
+                            getResources().getString(R.string.login_success),
+                            Toast.LENGTH_SHORT).show();
 
-            @Override
-            public void onError(Throwable e) {
+                    if (!mIsPasswordMemory.isChecked()) {  //如果用户没有点击记住密码  那就清除密码
+                        PreferencesUtils.putString(LoginActivity.this, Contants.USER_PASSWORD, "");
+                    } else { //否则就保存密码
+                        PreferencesUtils.putString(LoginActivity.this, Contants.USER_PASSWORD, pwd);
+                    }
 
-            }
+                    if (!mIsPasswordMemory.isChecked()){
+                        PreferencesUtils.putString(LoginActivity.this, Contants.USER_NAME, "");
+                    } else {
+                        PreferencesUtils.putString(LoginActivity.this, Contants.USER_NAME, name);
+                    }
 
-            @Override
-            public void onNext(BmobUser bmobUser) {
+                  //  MyUser myUser = new MyUser();
+                    myUser.setUsername(name);
+                    EventBus.getDefault().post(new LoginEvent(myUser));
 
-
-                if (!mIsPasswordMemory.isChecked()) {  //如果用户没有点击记住密码  那就清除密码
-                    PreferencesUtils.putString(LoginActivity.this, Contants.USER_PASSWORD, "");
-                } else { //否则就保存密码
-                    PreferencesUtils.putString(LoginActivity.this, Contants.USER_PASSWORD, pwd);
+                    Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                    intent.putExtra(Contants.IS_COME_FROM_LOGIN, true);
+                    startActivity(intent);
+                    finish();
                 }
-
-                MyUser myUser = new MyUser();
-                myUser.setUsername(name);
-                EventBus.getDefault().post(new LoginEvent(myUser));
-
-                Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-                intent.putExtra(Contants.IS_COME_FROM_LOGIN, true);
-                startActivity(intent);
-                finish();
             }
-
         });
+
+//        bmobUser.login(BmobUser.class).subscribe(new Subscriber<BmobUser>() {
+//            @Override
+//            public void onCompleted() {
+//
+//            }
+//
+//            @Override
+//            public void onError(Throwable e) {
+//
+//            }
+//
+//            @Override
+//            public void onNext(BmobUser bmobUser) {
+//
+//
+//
+//            }
+//
+//        });
 
 
     }
@@ -171,6 +189,8 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
                 break;
 
             case R.id.re_login:
+                mName = mEtPhone.getText().toString();
+                mPwd = mEtPassword.getText().toString();
                 if (!TextUtils.isEmpty(mName) && !TextUtils.isEmpty(mPwd))
                     toLogin(mName, mPwd);
                 break;

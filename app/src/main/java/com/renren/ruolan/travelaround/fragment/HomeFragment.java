@@ -116,7 +116,18 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_home, container, false);
         EventBus.getDefault().register(this);
-        cityName = getActivity().getResources().getString(R.string.beijing);
+
+        cityName = mFragmentCallback.getCityName();
+        if (cityName == null)
+            cityName = getActivity().getResources().getString(R.string.beijing);
+        mLatitude = mFragmentCallback.getLatitude();
+        if (mLatitude == -1){
+            mLatitude = 39.961256;
+        }
+        mLongitude = mFragmentCallback.getLongitude();
+        if (mLongitude == -1){
+            mLongitude = 116.461873;
+        }
         initView(view);
         initListener();
         initTitles();
@@ -165,9 +176,12 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
         ivAddress = (ImageView) view.findViewById(R.id.img_address);
         tvAddress = (TextView) view.findViewById(R.id.tv_address);
 
+        if (!TextUtils.isEmpty(cityName)){
+            tvAddress.setText(cityName);
+        }
+
         // TODO: 2016/11/17 定位城市
-        EventBus.getDefault().post(new HomeEvent(getActivity()
-                .getResources().getString(R.string.beijing), 39.961256, 116.461873));
+        EventBus.getDefault().post(new HomeEvent(cityName, mLatitude, mLongitude));
     }
 
 
@@ -212,7 +226,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
     private void initData() {
 
         CustomPrograss.show(getActivity(),
-                getActivity().getResources().getString(R.string.loading),false,null);
+                getActivity().getResources().getString(R.string.loading), false, null);
 
         OkGo.post(HttpUrlPath.HOME_DATA)
                 .tag(this)
@@ -289,6 +303,18 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
 
         }
     }
+
+//    @Subscribe(threadMode = ThreadMode.MAIN)
+//    public void HomeLocation(HomeLocationEvent event){
+//        if (event != null){
+//
+//            tvAddress.setText(event.cityName);
+//            cityName = event.cityName;
+//            mLatitude = event.mLatitude;
+//            mLongitude = event.mLongitude;
+//            initData(event.cityName,event.mLatitude,event.mLongitude);
+//        }
+//    }
 
     private void initData(String cityName, double latitude, double longitude) {
 

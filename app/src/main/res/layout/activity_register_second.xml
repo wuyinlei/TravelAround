@@ -78,7 +78,7 @@
 
             >
 
-            <ruolan.com.myhearts.widget.ClearEditText
+            <com.renren.ruolan.travelaround.widget.ClearEditText
                 android:id="@+id/edittxt_name"
                 android:layout_width="0dp"
                 android:layout_weight="1"
@@ -98,7 +98,7 @@
 
             >
 
-            <ruolan.com.myhearts.widget.ClearEditText
+            <com.renren.ruolan.travelaround.widget.ClearEditText
                 android:id="@+id/edittxt_code"
                 android:layout_width="0dp"
                 android:layout_weight="1"

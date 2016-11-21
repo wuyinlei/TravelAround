@@ -1,6 +1,7 @@
 package com.renren.ruolan.travelaround.fragment;
 
 
+import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
@@ -13,13 +14,28 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.afollestad.materialdialogs.MaterialDialog;
+import com.bumptech.glide.Glide;
 import com.renren.ruolan.travelaround.R;
 import com.renren.ruolan.travelaround.cn.sharesdk.onekeyshare.OnekeyShare;
+import com.renren.ruolan.travelaround.entity.MyUser;
+import com.renren.ruolan.travelaround.event.LoginEvent;
+import com.renren.ruolan.travelaround.ui.CollectActivity;
+import com.renren.ruolan.travelaround.ui.LoginActivity;
 import com.renren.ruolan.travelaround.utils.DataCleanManager;
+import com.renren.ruolan.travelaround.widget.transform.GlideCircleTransform;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
+
+import cn.bmob.v3.BmobUser;
 import cn.sharesdk.framework.ShareSDK;
+
+import static com.baidu.location.b.g.S;
+import static com.baidu.location.b.g.e;
 
 
 /**
@@ -54,6 +70,10 @@ public class MineFragment extends Fragment implements View.OnClickListener {
     private LinearLayout mSettingShare;
     private LinearLayout mVersionCheck;
     private TextView mVersionName;
+    private RelativeLayout mReCollect;
+    private boolean isUnLogin = false;
+
+    private MyUser mMyUser;
 
 
     @Override
@@ -61,6 +81,8 @@ public class MineFragment extends Fragment implements View.OnClickListener {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_category, container, false);
+        EventBus.getDefault().register(this);
+        mMyUser = BmobUser.getCurrentUser(MyUser.class);
         initView(view);
         initData();
         initListener();
@@ -70,6 +92,8 @@ public class MineFragment extends Fragment implements View.OnClickListener {
     private void initListener() {
         mSettingShare.setOnClickListener(this);
         mClearCache.setOnClickListener(this);
+        mBtnLogin.setOnClickListener(this);
+        mReCollect.setOnClickListener(this);
     }
 
     private void initData() {
@@ -92,6 +116,8 @@ public class MineFragment extends Fragment implements View.OnClickListener {
         mRlUnlogin = (RelativeLayout) view.findViewById(R.id.rl_unlogin);
         mTvUnloginNotice = (TextView) view.findViewById(R.id.tv_unlogin_notice);
         mBtnLogin = (Button) view.findViewById(R.id.btn_login);
+
+        mReCollect = (RelativeLayout) view.findViewById(R.id.collect_re);
         mTvTicket = (TextView) view.findViewById(R.id.tv_ticket);
         mTvCollect = (TextView) view.findViewById(R.id.tv_collect);
         mTvRecentView = (TextView) view.findViewById(R.id.tv_recent_view);
@@ -110,8 +136,22 @@ public class MineFragment extends Fragment implements View.OnClickListener {
 
         mVersionCheck = (LinearLayout) view.findViewById(R.id.version_check);
         mVersionName = (TextView) view.findViewById(R.id.version_name);
+        mUserImg = (ImageView) view.findViewById(R.id.user_img);
+
+        if (mMyUser != null){
+            isUnLogin = false;
+            mTvUnloginNotice.setText(mMyUser.getUsername());
+            mUserImg.setVisibility(View.VISIBLE);
+            Glide.with(getActivity())
+                        .load(mMyUser.getImgurl())
+                        .asBitmap().transform(new GlideCircleTransform(getActivity())).into(mUserImg);
+                mBtnLogin.setText(getActivity().getResources().getString(R.string.unlogin));
+        }
+
 
     }
+
+    private ImageView mUserImg;
 
 
     /**
@@ -163,6 +203,20 @@ public class MineFragment extends Fragment implements View.OnClickListener {
 
     }
 
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void LoginEventRegister(LoginEvent event) {
+        if (event != null) {
+            mTvUnloginNotice.setText(event.mMyUser.getUsername());
+            if (event.mMyUser.getImgurl() != null){
+                Glide.with(getActivity())
+                        .load(event.mMyUser.getImgurl())
+                        .asBitmap().into(mUserImg);
+                mBtnLogin.setText(getActivity().getResources().getString(R.string.unlogin));
+            }
+        }
+    }
+
+
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
@@ -180,6 +234,34 @@ public class MineFragment extends Fragment implements View.OnClickListener {
                         .positiveText(getResources().getString(R.string.ok))
                         .onPositive((dialog, which) -> mCurrentCache.setText("0 KB")).show();
                 break;
+
+            case R.id.btn_login:
+                if (mBtnLogin.getText().equals(getActivity().getResources().getString(R.string.login))) {
+                    Intent intent = new Intent(getActivity(), LoginActivity.class);
+                    startActivity(intent);
+                } else if (mBtnLogin.getText().equals(getActivity().getResources().getString(R.string.unlogin))){
+                    MyUser.logOut();
+                    isUnLogin = true;
+                    mBtnLogin.setText(getActivity().getResources().getString(R.string.login));
+                    mUserImg.setVisibility(View.INVISIBLE);
+                    mTvUnloginNotice.setText("");
+                }
+                break;
+
+            case R.id.collect_re:
+                if (mMyUser != null && !isUnLogin){
+                    startActivity(new Intent(getActivity(), CollectActivity.class));
+                } else {
+                    Toast.makeText(getActivity(), getActivity().getResources().getString(R.string.collect_login), Toast.LENGTH_SHORT).show();
+                    startActivity(new Intent(getActivity(), LoginActivity.class));
+                }
+                break;
         }
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        EventBus.getDefault().unregister(this);
     }
 }

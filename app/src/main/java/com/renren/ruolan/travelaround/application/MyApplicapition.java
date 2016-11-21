@@ -8,8 +8,10 @@ import com.lzy.okgo.cache.CacheEntity;
 import com.lzy.okgo.cache.CacheMode;
 import com.lzy.okgo.cookie.store.PersistentCookieStore;
 import com.renren.ruolan.travelaround.db.DBManager;
+import com.renren.ruolan.travelaround.utils.ManifestUtil;
 
 import cn.bmob.v3.Bmob;
+import cn.smssdk.SMSSDK;
 
 /**
  * Created by Administrator on 2016/11/16.
@@ -37,6 +39,11 @@ public class MyApplicapition extends Application {
         dbManager = new DBManager(getApplicationContext());
         dbManager.openDatabase();
 
+
+        //短信验证
+
+        SMSSDK.initSDK(this, ManifestUtil.getMetaDataValue(this, "mob_sms_appKey"),
+                ManifestUtil.getMetaDataValue(this, "mob_sms_appSecrect"));
 
         Bmob.initialize(this, "c4527755a846ac81c68a546c6b35cc16");
 

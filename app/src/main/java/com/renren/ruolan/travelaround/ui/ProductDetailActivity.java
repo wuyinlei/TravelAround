@@ -1,6 +1,7 @@
 package com.renren.ruolan.travelaround.ui;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.support.v4.view.ViewCompat;
 import android.support.v7.widget.CardView;
@@ -37,6 +38,7 @@ import com.renren.ruolan.travelaround.entity.DetailBean.ResultEntity.OtherInfoEn
 import com.renren.ruolan.travelaround.entity.DetailBean.ResultEntity.TagListEntity;
 import com.renren.ruolan.travelaround.entity.MoreDataDetail;
 import com.renren.ruolan.travelaround.entity.MoreDataDetail.ResultEntity.DetailListEntity;
+import com.renren.ruolan.travelaround.entity.MyUser;
 import com.renren.ruolan.travelaround.widget.CustomPrograss;
 import com.renren.ruolan.travelaround.widget.PullUpToLoadMore;
 import com.renren.ruolan.travelaround.widget.carousel.FlyBannerSecond;
@@ -48,6 +50,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import cn.bmob.v3.BmobQuery;
+import cn.bmob.v3.BmobUser;
 import cn.bmob.v3.datatype.BmobQueryResult;
 import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.SQLQueryListener;
@@ -121,7 +124,7 @@ public class ProductDetailActivity extends BaseActivity implements View.OnClickL
         super.initData();
 
 
-        CustomPrograss.show(this,getResources().getString(R.string.loading),false,null);
+        CustomPrograss.show(this, getResources().getString(R.string.loading), false, null);
 
         OkGo.post(HttpUrlPath.HOME_DETAIL_URL)
                 .params("Platform", Platform)
@@ -227,7 +230,6 @@ public class ProductDetailActivity extends BaseActivity implements View.OnClickL
     public void initView() {
 
 
-
         Platform = getIntent().getStringExtra(Contants.PLATFORM);
         ProductID = getIntent().getStringExtra(Contants.PRODUCT_ID);
         CityName = getIntent().getStringExtra(Contants.CITY_NAME);
@@ -298,7 +300,12 @@ public class ProductDetailActivity extends BaseActivity implements View.OnClickL
                 finish();
                 break;
             case R.id.fab_collect:
-                collectData();
+                if (BmobUser.getCurrentUser(MyUser.class) != null) {
+                    collectData();
+                } else {
+                    Toast.makeText(this, getResources().getString(R.string.collect_login), Toast.LENGTH_SHORT).show();
+                    startActivity(new Intent(this, LoginActivity.class));
+                }
                 break;
         }
     }

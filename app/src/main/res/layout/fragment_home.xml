@@ -25,7 +25,6 @@
             android:layout_centerVertical="true"
             android:layout_marginLeft="3dp"
             android:layout_toRightOf="@+id/img_address"
-            android:text="@string/beijing"
             android:textColor="#00000f"/>
 
         <LinearLayout

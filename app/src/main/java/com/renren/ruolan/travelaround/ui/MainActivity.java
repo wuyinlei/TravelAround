@@ -1,8 +1,7 @@
 package com.renren.ruolan.travelaround.ui;
 
 import android.os.Build;
-import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
@@ -10,11 +9,21 @@ import android.widget.LinearLayout;
 import android.widget.TabHost;
 import android.widget.TextView;
 
+import com.baidu.location.BDLocation;
+import com.baidu.location.BDLocationListener;
+import com.baidu.location.LocationClient;
+import com.baidu.location.LocationClientOption;
+import com.baidu.location.Poi;
+import com.baidu.mapapi.map.MapStatus;
+import com.baidu.mapapi.map.MapStatusUpdate;
+import com.baidu.mapapi.map.MapStatusUpdateFactory;
+import com.baidu.mapapi.model.LatLng;
+import com.renren.ruolan.travelaround.BaseActivity;
 import com.renren.ruolan.travelaround.FragmentCallback;
 import com.renren.ruolan.travelaround.R;
 import com.renren.ruolan.travelaround.Tab;
+import com.renren.ruolan.travelaround.constant.Contants;
 import com.renren.ruolan.travelaround.event.HomeLocationEvent;
-import com.renren.ruolan.travelaround.event.LocationEvent;
 import com.renren.ruolan.travelaround.fragment.HomeFragment;
 import com.renren.ruolan.travelaround.fragment.MineFragment;
 import com.renren.ruolan.travelaround.fragment.SelefFragment;
@@ -26,7 +35,13 @@ import org.greenrobot.eventbus.EventBus;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity implements FragmentCallback {
+import android.Manifest;
+
+import static com.baidu.location.b.g.t;
+import static com.renren.ruolan.travelaround.R.id.cityname;
+
+
+public class MainActivity extends BaseActivity implements FragmentCallback {
 
     //底部tab
     private List<Tab> mTabs = new ArrayList<>(5);
@@ -35,28 +50,56 @@ public class MainActivity extends AppCompatActivity implements FragmentCallback 
     private TextView text;  //底部标题
     private LayoutInflater mInflater;
 
-    private String cityname;
+    private String cityName;
     private double latitude, longitude;
 
+
+    //  private String cityName;
+    //  double latitude,longitude;
+
+
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    protected int getResultId() {
+        return R.layout.activity_main;
+    }
 
-        setContentView(R.layout.activity_main);
+    @Override
+    protected void initListener() {
 
-        cityname = getIntent().getStringExtra("cityname");
+    }
+
+
+    @Override
+    public void initView() {
+
+        // EventBus.getDefault().register(this);
+
+        cityName = getIntent().getStringExtra("cityname");
         latitude = getIntent().getDoubleExtra("latitude", 0.0);
         longitude = getIntent().getDoubleExtra("longitude", 0.0);
+        //  Log.d("MainActivity", cityname);
+        //  Log.d("MainActivity", "latitude:" + latitude);
+        // Log.d("MainActivity", "longitude:" + longitude);
+        // location();
 
-        EventBus.getDefault().post(new HomeLocationEvent(cityname,latitude,longitude));
-
-        initView();
+//        initView();
         initTab();
+
+        EventBus.getDefault().post(new HomeLocationEvent(cityName, latitude, longitude));
+
     }
 
-    private void initView() {
+    public String getCityName() {
+        return cityName;
     }
 
+    public double getLatitude() {
+        return latitude;
+    }
+
+    public double getLongitude() {
+        return longitude;
+    }
 
     /**
      * 初始化底部的几个菜单栏
@@ -115,5 +158,12 @@ public class MainActivity extends AppCompatActivity implements FragmentCallback 
     @Override
     public void changeTabHost(int index) {
         mTabHost.setCurrentTab(1);
+    }
+
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        //EventBus.getDefault().unregister(this);
     }
 }

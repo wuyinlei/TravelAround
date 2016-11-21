@@ -85,6 +85,11 @@
                 android:padding="15.0dip"
                 android:visibility="visible">
 
+                <ImageView
+                    android:id="@+id/user_img"
+                    android:layout_width="@dimen/x50"
+                    android:layout_height="@dimen/x50"/>
+
                 <TextView
                     android:id="@+id/tv_unlogin_notice"
                     android:layout_width="wrap_content"
@@ -137,6 +142,7 @@
                     android:background="#50666666"/>
 
                 <RelativeLayout
+                    android:id="@+id/collect_re"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
@@ -148,7 +154,6 @@
                         android:layout_width="fill_parent"
                         android:layout_height="wrap_content"
                         android:background="@drawable/list_view_item_bg_selector"
-                        android:clickable="true"
                         android:drawablePadding="5.0dip"
                         android:drawableTop="@mipmap/user_icon_favortite"
                         android:gravity="center_horizontal"
@@ -464,7 +469,6 @@
                     android:background="@drawable/grey_right"
                     android:visibility="gone"/>
             </LinearLayout>
-
 
 
         </LinearLayout>

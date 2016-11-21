@@ -3,6 +3,7 @@ package com.renren.ruolan.travelaround.fragment;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
@@ -10,10 +11,12 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.lzy.okgo.OkGo;
+import com.lzy.okgo.callback.StringCallback;
 import com.lzy.okgo.convert.StringConvert;
 import com.lzy.okrx.RxAdapter;
 import com.renren.ruolan.travelaround.R;
@@ -25,6 +28,9 @@ import com.renren.ruolan.travelaround.entity.SelefHotelData;
 import com.renren.ruolan.travelaround.entity.SelefHotelData.ResultEntity.ProductListEntity;
 import com.renren.ruolan.travelaround.event.CityIdEvent;
 import com.renren.ruolan.travelaround.ui.ProductDetailActivity;
+import com.renren.ruolan.travelaround.ui.TagDetailActivity;
+import com.renren.ruolan.travelaround.utils.ToastUtils;
+import com.renren.ruolan.travelaround.widget.CustomPrograss;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
@@ -33,8 +39,11 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
+import okhttp3.Call;
+import okhttp3.Response;
 import rx.android.schedulers.AndroidSchedulers;
 
+import static android.R.attr.type;
 import static com.baidu.location.b.g.d;
 import static com.baidu.location.b.g.s;
 
@@ -54,6 +63,8 @@ public class SelefFragment extends Fragment {
     private String cityID = "18";
     private String cityName;
     private RecyclerView mRecyclerView;
+    private int currentPage  = 1;
+    private int totalPage ;
 
     private List<ProductListEntity> mProductListEntities = new ArrayList<>();
 
@@ -70,42 +81,97 @@ public class SelefFragment extends Fragment {
     }
 
     private void initData() {
-        OkGo.get(HttpUrlPath.GET_HOTEL_INFO)
+        OkGo.post(HttpUrlPath.GET_HOTEL_INFO)
                 .params("CityID", cityID)
-                .getCall(StringConvert.create(), RxAdapter.<String>create())
-                .doOnSubscribe(() -> {
-                })
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(s -> {
-                    Type type = new TypeToken<SelefHotelData>() {
-                    }.getType();
-                    SelefHotelData data = new Gson().fromJson(s, type);
-                    mProductListEntities = data.getResult().getProductList();
-                    if (mProductListEntities.size() > 0) {
-                        mHotelAdapter.setResultsBeen(mProductListEntities);
+                .params("CurrentPage",currentPage)
+                .execute(new StringCallback(){
+
+                    @Override
+                    public void onSuccess(String s, Call call, Response response) {
+                        Type type = new TypeToken<SelefHotelData>() {
+                        }.getType();
+                        SelefHotelData data = new Gson().fromJson(s, type);
+                        mProductListEntities = data.getResult().getProductList();
+                        if (mProductListEntities.size() > 0) {
+                            totalPage = data.getResult().getTotalPage();
+                            mHotelAdapter.setResultsBeen(mProductListEntities);
+                        }
                     }
-                }, throwable -> {
                 });
     }
 
     private void initView(View view) {
         mRecyclerView = (RecyclerView) view.findViewById(R.id.recycler_view);
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        LinearLayoutManager layout = new LinearLayoutManager(getActivity());
+        mRecyclerView.setLayoutManager(layout);
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
         mHotelAdapter = new SelefHotelAdapter(mProductListEntities, getActivity());
         mRecyclerView.setAdapter(mHotelAdapter);
-        mHotelAdapter.setOnItemClick(new SelefHotelAdapter.OnItemClick() {
+
+        mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
-            public void OnItemClickListener(View view, int position, ProductListEntity bean) {
-                String Platform = "1";
-                String ProductID = mProductListEntities.get(position).getProductID();
-                Intent intent = new Intent(getActivity(), ProductDetailActivity.class);
-                intent.putExtra(Contants.PLATFORM, Platform);
-                intent.putExtra(Contants.PRODUCT_ID, ProductID);
-                intent.putExtra(Contants.CITY_NAME, cityName);
-                startActivity(intent);
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+
+                int lastVisiableItemPosition = layout.findLastVisibleItemPosition();
+                if (lastVisiableItemPosition + 1 == mHotelAdapter.getItemCount()) {
+//                    CustomPrograss.show(getActivity(),
+//                            getResources().getString(R.string.loading),
+//                            false, null);
+                    new Handler().postDelayed(() -> {getLoadMoreData();
+                    mHotelAdapter.notifyItemRemoved(mHotelAdapter.getItemCount());}, 1500);
+                }
+            }
+
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
             }
         });
+
+        mHotelAdapter.setOnItemClick((view1, position, bean) -> {
+            String Platform = "1";
+            String ProductID = mProductListEntities.get(position).getProductID();
+            Intent intent = new Intent(getActivity(), ProductDetailActivity.class);
+            intent.putExtra(Contants.PLATFORM, Platform);
+            intent.putExtra(Contants.PRODUCT_ID, ProductID);
+            intent.putExtra(Contants.CITY_NAME, cityName);
+            startActivity(intent);
+        });
+    }
+
+    private void getLoadMoreData() {
+        currentPage ++;
+        if (currentPage>totalPage){
+            Toast.makeText(getActivity(),
+                    getActivity().getResources()
+                            .getString(R.string.loading_finish),
+                    Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        OkGo.get(HttpUrlPath.GET_HOTEL_INFO)
+                .params("CityID", cityID)
+                .params("CurrentPage",currentPage)
+                .execute(new StringCallback(){
+                    @Override
+                    public void onSuccess(String s, Call call, Response response) {
+                        Type type = new TypeToken<SelefHotelData>() {
+                        }.getType();
+                        SelefHotelData data = new Gson().fromJson(s, type);
+                        // mProductListEntities.clear();
+                        List<ProductListEntity> productList = data.getResult().getProductList();
+                        mProductListEntities.addAll(productList);
+                        if (mProductListEntities.size() > 0) {
+                            mHotelAdapter.setResultsBeen(mProductListEntities);
+                        }
+                    }
+
+
+                });
+
+
+
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
@@ -124,22 +190,23 @@ public class SelefFragment extends Fragment {
      * @param cityName
      */
     private void initData(String cityID, String cityName) {
+        currentPage = 1;
         OkGo.get(HttpUrlPath.GET_HOTEL_INFO)
                 .params("CityID", cityID)
-                .getCall(StringConvert.create(), RxAdapter.<String>create())
-                .doOnSubscribe(() -> {
-                })
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(s -> {
-                    Type type = new TypeToken<SelefHotelData>() {
-                    }.getType();
-                    SelefHotelData data = new Gson().fromJson(s, type);
-                    mProductListEntities.clear();
-                    mProductListEntities = data.getResult().getProductList();
-                    if (mProductListEntities.size() > 0) {
-                        mHotelAdapter.setResultsBeen(mProductListEntities);
+                .params("CurrentPage",currentPage)
+                .execute(new StringCallback(){
+
+                    @Override
+                    public void onSuccess(String s, Call call, Response response) {
+                        Type type = new TypeToken<SelefHotelData>() {
+                        }.getType();
+                        SelefHotelData data = new Gson().fromJson(s, type);
+                        mProductListEntities.clear();
+                        mProductListEntities = data.getResult().getProductList();
+                        if (mProductListEntities.size() > 0) {
+                            mHotelAdapter.setResultsBeen(mProductListEntities);
+                        }
                     }
-                }, throwable -> {
                 });
     }
 

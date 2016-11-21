@@ -65,7 +65,7 @@ public class SelefHotelData implements Serializable {
         private String totalRecord;
         private String currentPage;
         private String pageSize;
-        private String totalPage;
+        private int totalPage;
         private List<ProductListEntity> productList;
 
         public String getTotalRecord() {
@@ -92,11 +92,11 @@ public class SelefHotelData implements Serializable {
             this.pageSize = pageSize;
         }
 
-        public String getTotalPage() {
+        public int getTotalPage() {
             return totalPage;
         }
 
-        public void setTotalPage(String totalPage) {
+        public void setTotalPage(int totalPage) {
             this.totalPage = totalPage;
         }
 

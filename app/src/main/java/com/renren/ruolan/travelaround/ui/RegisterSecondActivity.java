@@ -16,6 +16,7 @@ import com.renren.ruolan.travelaround.entity.MyUser;
 import com.renren.ruolan.travelaround.utils.CountTimerView;
 import com.renren.ruolan.travelaround.utils.PreferencesUtils;
 import com.renren.ruolan.travelaround.utils.RegularUtils;
+import com.renren.ruolan.travelaround.utils.ToastUtils;
 import com.renren.ruolan.travelaround.widget.ClearEditText;
 import com.renren.ruolan.travelaround.widget.CustomPrograss;
 
@@ -120,7 +121,7 @@ public class RegisterSecondActivity extends BaseActivity implements View.OnClick
         String vCode = mEdittxtCode.getText().toString().trim();
 
         if (TextUtils.isEmpty(vCode)) {
-           // ToastUtils.show(this, R.string.smssdk_write_identify_code);
+            ToastUtils.show(this, R.string.smssdk_write_identify_code);
             return;
         }
         SMSSDK.submitVerificationCode(countryCode, phone, vCode);
@@ -178,7 +179,7 @@ public class RegisterSecondActivity extends BaseActivity implements View.OnClick
                                 throwable.getMessage());
                         String des = object.optString("detail");
                         if (!TextUtils.isEmpty(des)) {
-//                                ToastUtils.show(RegActivity.this, des);
+                                ToastUtils.show(RegisterSecondActivity.this, des);
                             return;
                         }
                     } catch (Exception e) {

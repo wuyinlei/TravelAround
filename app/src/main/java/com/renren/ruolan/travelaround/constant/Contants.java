@@ -34,4 +34,14 @@ public class Contants {
     public static String PLATFORM = "Platform";
     public static String PRODUCT_ID = "ProductID";
     public static String CITY_NAME = "CityName";
+
+
+    /**
+     * 权限常量相关
+     */
+    /**写入sdcard权限*/
+    public static final  int ACCESS_COARSE_LOCATION = 0X01;
+
+    /**打电话权限*/
+    public static final int CALL_PHONE_CODE = 0X02;
 }

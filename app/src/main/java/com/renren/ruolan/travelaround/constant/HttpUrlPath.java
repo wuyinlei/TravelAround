@@ -35,8 +35,10 @@ public class HttpUrlPath {
     public static String GET_HOME_ARTICLE_LIST = "http://api.hifangjia.com/Article/V1902GetArticleList.aspx";
 
     //http://fjapi.chufadian.com/Html5/AticleDetail.aspx?id=60  发现下面数据详情
+    public static String GET_ARTICLE_INFO = "http://fjapi.chufadian.com/Html5/AticleDetail.aspx?id=";
 
     //参数Platform    CurrentPage   CityName   ProvinceID   (Latitude   Longitude)   ClassID
     //http://api.hifangjia.com/Home/V18/V1801GetProListByClassID.aspx   tab详情
+    public static String GET_TAG_DETAIL_INFO = "http://api.hifangjia.com/Home/V18/V1801GetProListByClassID.aspx";
 
 }
