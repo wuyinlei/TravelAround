@@ -15,8 +15,7 @@ import android.widget.Toast;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.lzy.okgo.OkGo;
-import com.lzy.okgo.convert.StringConvert;
-import com.lzy.okrx.RxAdapter;
+import com.lzy.okgo.callback.StringCallback;
 import com.renren.ruolan.travelaround.BaseActivity;
 import com.renren.ruolan.travelaround.R;
 import com.renren.ruolan.travelaround.adapter.TagDetailAdapter;
@@ -24,16 +23,14 @@ import com.renren.ruolan.travelaround.constant.Contants;
 import com.renren.ruolan.travelaround.constant.HttpUrlPath;
 import com.renren.ruolan.travelaround.entity.TagData;
 import com.renren.ruolan.travelaround.entity.TagData.ResultEntity.ProductListEntity;
-import com.renren.ruolan.travelaround.widget.CustomPrograss;
+import com.renren.ruolan.travelaround.widget.dialog.CustomPrograss;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
-import rx.android.schedulers.AndroidSchedulers;
-
-import static com.baidu.location.b.g.s;
-import static com.baidu.location.b.g.t;
+import okhttp3.Call;
+import okhttp3.Response;
 
 public class TagDetailActivity extends BaseActivity implements SwipeRefreshLayout.OnRefreshListener {
 
@@ -141,27 +138,24 @@ public class TagDetailActivity extends BaseActivity implements SwipeRefreshLayou
                 .params("CityName", CityName)
                 .params("ProvinceID", ProvinceID)
                 .params("ClassID", ClassID)
-                .getCall(StringConvert.create(), RxAdapter.<String>create())
-                .doOnSubscribe(() -> {
-                })
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(s -> {
-                    Type type = new TypeToken<TagData>() {
-                    }.getType();
-                    TagData tagData = new Gson().fromJson(s, type);
-                    List<ProductListEntity> productList = tagData.getResult().getProductList();
-                    CustomPrograss.disMiss();
-                    if (productList.size() > 0 && productList != null) {
-                        //mRefreshLayout.setRefreshing(false);
+                .execute(new StringCallback(){
+
+                    @Override
+                    public void onSuccess(String s, Call call, Response response) {
+                        Type type = new TypeToken<TagData>() {
+                        }.getType();
+                        TagData tagData = new Gson().fromJson(s, type);
+                        List<ProductListEntity> productList = tagData.getResult().getProductList();
+                        CustomPrograss.disMiss();
+                        if (productList.size() > 0 && productList != null) {
+                            //mRefreshLayout.setRefreshing(false);
 
 
-                       // totalPage = tagData.getResult().getTotalPage();
-                        mTagDatas.addAll(productList);
-                        mDetailAdapter.setDatas(mTagDatas);
+                            // totalPage = tagData.getResult().getTotalPage();
+                            mTagDatas.addAll(productList);
+                            mDetailAdapter.setDatas(mTagDatas);
+                        }
                     }
-                }, throwable -> {
-                    CustomPrograss.disMiss();
-                  //  mRefreshLayout.setRefreshing(false);
                 });
 
     }
@@ -181,22 +175,21 @@ public class TagDetailActivity extends BaseActivity implements SwipeRefreshLayou
                 .params("CityName", CityName)
                 .params("ProvinceID", ProvinceID)
                 .params("ClassID", ClassID)
-                .getCall(StringConvert.create(), RxAdapter.<String>create())
-                .doOnSubscribe(() -> {
-                })
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(s -> {
-                    Type type = new TypeToken<TagData>() {
-                    }.getType();
-                    TagData tagData = new Gson().fromJson(s, type);
-                    mTagDatas = tagData.getResult().getProductList();
-                    if (mTagDatas.size() > 0 && mTagDatas != null) {
-                        mRefreshLayout.setRefreshing(false);
-                        totalPage = tagData.getResult().getTotalPage();
-                        mDetailAdapter.setDatas(mTagDatas);
+                .execute(new StringCallback(){
+
+                    @Override
+                    public void onSuccess(String s, Call call, Response response) {
+                        Type type = new TypeToken<TagData>() {
+                        }.getType();
+                        TagData tagData = new Gson().fromJson(s, type);
+                        mTagDatas = tagData.getResult().getProductList();
+                        if (mTagDatas.size() > 0 && mTagDatas != null) {
+                            mRefreshLayout.setRefreshing(false);
+                            totalPage = tagData.getResult().getTotalPage();
+                            mDetailAdapter.setDatas(mTagDatas);
+                        }
                     }
-                }, throwable -> {
-                    mRefreshLayout.setRefreshing(false);
                 });
+
     }
 }

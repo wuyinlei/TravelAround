@@ -18,7 +18,7 @@ import com.renren.ruolan.travelaround.utils.PreferencesUtils;
 import com.renren.ruolan.travelaround.utils.RegularUtils;
 import com.renren.ruolan.travelaround.utils.ToastUtils;
 import com.renren.ruolan.travelaround.widget.ClearEditText;
-import com.renren.ruolan.travelaround.widget.CustomPrograss;
+import com.renren.ruolan.travelaround.widget.dialog.CustomPrograss;
 
 import org.json.JSONObject;
 
@@ -195,15 +195,15 @@ public class RegisterSecondActivity extends BaseActivity implements View.OnClick
      * 进行注册
      */
     private void doRegister() {
-        CustomPrograss.show(this,getResources()
-                .getString(R.string.register_loading),false,null);
+
         String userName = mEditName.getText().toString().trim();
         final MyUser myUser = new MyUser();
-        if (RegularUtils.isUsername(userName)) {
+            CustomPrograss.show(this,getResources()
+                    .getString(R.string.register_loading),true,null);
             myUser.setUsername(userName);
             myUser.setPassword(pwd);
             myUser.setMobilePhoneNumber(phone);
-            addSubscription(myUser.signUp(new SaveListener<MyUser>() {
+            myUser.signUp(new SaveListener<MyUser>() {
                 @Override
                 public void done(MyUser myUser, BmobException e) {
                     if (e == null) {
@@ -224,8 +224,7 @@ public class RegisterSecondActivity extends BaseActivity implements View.OnClick
                         CustomPrograss.disMiss();
                     }
                 }
-            }));
-        }
+            });
 
     }
 

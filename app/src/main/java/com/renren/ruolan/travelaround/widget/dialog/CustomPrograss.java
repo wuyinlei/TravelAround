@@ -1,4 +1,4 @@
-package com.renren.ruolan.travelaround.widget;
+package com.renren.ruolan.travelaround.widget.dialog;
 
 import android.app.Dialog;
 import android.content.Context;

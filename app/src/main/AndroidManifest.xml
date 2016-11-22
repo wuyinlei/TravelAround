@@ -35,7 +35,7 @@
     <application
         android:name=".application.MyApplicapition"
         android:allowBackup="true"
-        android:icon="@mipmap/icon"
+        android:icon="@drawable/icon"
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
@@ -129,6 +129,10 @@
             android:value="7e5dcd686ad6b4acbd883fdd8be994fa"/>
 
         <activity android:name=".ui.CollectActivity">
+        </activity>
+        <activity android:name=".ui.ProductMoreActivity">
+        </activity>
+        <activity android:name=".ui.ProductCmtActivity">
         </activity>
     </application>
 

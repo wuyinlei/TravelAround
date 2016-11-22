@@ -15,10 +15,10 @@
 
         <ImageView
             android:id="@+id/img_back"
-            android:layout_centerVertical="true"
-            android:layout_alignParentLeft="true"
             android:layout_width="35dp"
             android:layout_height="35dp"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
             android:layout_gravity="center_vertical"
             android:layout_marginLeft="8dp"
             android:background="@drawable/info_back_bg"/>
@@ -26,19 +26,19 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal|center_vertical"
-            android:text="商品详情"
             android:layout_centerHorizontal="true"
             android:layout_centerVertical="true"
+            android:layout_gravity="center_horizontal|center_vertical"
+            android:text="商品详情"
             android:textColor="@color/white"
             android:textSize="@dimen/x18"/>
 
         <ImageView
-            android:layout_centerVertical="true"
-            android:layout_alignParentRight="true"
             android:id="@+id/img_share"
             android:layout_width="35dp"
             android:layout_height="35dp"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
             android:layout_gravity="center_vertical|right"
             android:layout_marginRight="8dp"
             android:background="@drawable/info_share_bg"/>
@@ -47,9 +47,9 @@
 
     <com.renren.ruolan.travelaround.widget.PullUpToLoadMore
         android:id="@+id/top_scroll_view"
-        android:layout_below="@+id/re_ll"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_below="@+id/re_ll"
         android:orientation="vertical">
 
         <com.renren.ruolan.travelaround.widget.DetailScrollView
@@ -57,254 +57,7 @@
             android:layout_height="match_parent"
             android:fillViewport="true">
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="vertical">
-
-
-                <RelativeLayout
-                    android:id="@+id/ll_1"
-                    android:layout_width="match_parent"
-                    android:layout_height="180dp">
-
-                    <com.renren.ruolan.travelaround.widget.carousel.FlyBannerSecond
-                        android:id="@+id/hacky_view_pager"
-                        android:layout_width="match_parent"
-                        android:layout_height="180dp"
-                        android:persistentDrawingCache="animation"/>
-
-                    <TextView
-                        android:id="@+id/tv_price"
-                        android:layout_width="80dp"
-                        android:layout_height="30dp"
-                        android:layout_alignParentBottom="true"
-                        android:layout_alignParentRight="true"
-                        android:layout_marginRight="20dp"
-                        android:background="@color/gray"
-                        android:gravity="center"
-                        android:text="1110元"
-                        android:textColor="@color/white"
-                        android:textSize="14sp"
-                        android:visibility="invisible"/>
-                </RelativeLayout>
-
-                <RelativeLayout
-                    android:id="@+id/ll_2"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="10dp">
-
-                    <TextView
-                        android:id="@+id/tv_name"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="古北水镇大酒店"
-                        android:textSize="18sp"
-                        android:textStyle="bold"/>
-
-                    <TextView
-                        android:id="@+id/tv_des"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_below="@id/tv_name"/>
-
-
-                    <com.renren.ruolan.travelaround.widget.tag.TagCloudLayout
-                        android:id="@+id/container"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_below="@+id/tv_des"
-                        android:layout_marginBottom="5dp"
-                        android:layout_marginTop="5dp"
-                        app:lineSpacing="3dp"
-                        app:tagSpacing="10dp"/>
-
-                </RelativeLayout>
-
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="10dp"
-                    android:background="@color/divider"/>
-
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="50dp">
-
-                    <ImageView
-                        android:id="@+id/img_address"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_centerVertical="true"
-                        android:layout_marginLeft="10dp"
-                        android:src="@drawable/home_address_normal"/>
-
-                    <TextView
-                        android:id="@+id/tv_address"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_centerVertical="true"
-                        android:layout_marginLeft="10dp"
-                        android:layout_toRightOf="@+id/img_address"
-                        android:textSize="14sp"/>
-
-                    <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentRight="true"
-                        android:layout_centerVertical="true"
-                        android:layout_marginRight="5dp"
-                        android:src="@drawable/info_sub"/>
-
-                </RelativeLayout>
-
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="5dp"
-                    android:background="@color/divider"/>
-
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="30dp">
-
-                    <ImageView
-                        android:id="@+id/user_center_order_left"
-                        android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:layout_centerVertical="true"
-                        android:src="@drawable/user_center_order_left"/>
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_centerVertical="true"
-                        android:layout_toRightOf="@+id/user_center_order_left"
-                        android:text="热门产品"
-                        android:textSize="16sp"/>
-
-                </RelativeLayout>
-
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="2dp"
-                    android:background="@color/divider"/>
-
-                <android.support.v7.widget.RecyclerView
-                    android:id="@+id/hot_recycler_view"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"/>
-
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="10dp"
-                    android:background="@color/divider"/>
-
-
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="30dp">
-
-                    <ImageView
-                        android:id="@+id/holiday_notice"
-                        android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:layout_centerVertical="true"
-                        android:src="@drawable/user_center_order_left"/>
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_centerVertical="true"
-                        android:layout_toRightOf="@id/holiday_notice"
-                        android:text="放假须知"
-                        android:textSize="16sp"/>
-
-                </RelativeLayout>
-
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="5dp"
-                    android:background="@color/divider"/>
-
-                <android.support.v7.widget.RecyclerView
-                    android:id="@+id/holiday_recycler_view"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"/>
-
-
-                <com.hymane.expandtextview.ExpandTextView
-                    android:id="@+id/etv"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:paddingBottom="8dp"
-                    android:paddingLeft="@dimen/activity_horizontal_margin"
-                    android:paddingRight="@dimen/activity_horizontal_margin"
-                    android:paddingTop="8dp"
-                    app:contentTextSize="14sp"
-                    app:expandHint="点击展开"
-                    app:foldHint="点击收回"
-                    app:textContentColor="?android:attr/textColorPrimary"
-                    app:textHintColor="?android:attr/textColorPrimary"
-                    app:textTitleColor="?android:attr/textColorSecondary"
-                    app:titleText="交通路线"
-                    app:titleTextSize="16sp"/>
-
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="10dp"
-                    android:background="@color/divider"/>
-
-
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="30dp">
-
-                    <ImageView
-                        android:id="@+id/user_comment"
-                        android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:layout_centerVertical="true"
-                        android:src="@drawable/info_commit_icon"/>
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_centerVertical="true"
-                        android:layout_toRightOf="@id/user_comment"
-                        android:text="用户评论"
-                        android:textSize="16sp"/>
-
-                </RelativeLayout>
-
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
-
-                    <android.support.v7.widget.RecyclerView
-                        android:id="@+id/comment_recycler_view"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"/>
-
-                </RelativeLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="0dp"
-                    android:layout_weight="1"
-                    android:background="@color/divider"
-                    android:gravity="bottom">
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:height="50dp"
-                        android:gravity="center"
-                        android:text="继续拖动查看图文详情"
-                        android:textColor="#000"/>
-
-                </LinearLayout>
-
-            </LinearLayout>
+            <include layout="@layout/product_layout_top"/>
 
         </com.renren.ruolan.travelaround.widget.DetailScrollView>
 
@@ -313,16 +66,12 @@
             android:layout_height="match_parent"
             android:fillViewport="true">
 
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/detail_recycler_view"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"/>
+            <include layout="@layout/product_layout_bottom"/>
 
         </com.renren.ruolan.travelaround.widget.DetailScrollView>
 
 
     </com.renren.ruolan.travelaround.widget.PullUpToLoadMore>
-
 
 
     <FrameLayout

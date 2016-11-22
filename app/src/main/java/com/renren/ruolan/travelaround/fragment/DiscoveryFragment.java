@@ -2,7 +2,6 @@ package com.renren.ruolan.travelaround.fragment;
 
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -11,7 +10,6 @@ import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,12 +19,9 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.callback.StringCallback;
-import com.lzy.okgo.convert.StringConvert;
-import com.lzy.okrx.RxAdapter;
 import com.renren.ruolan.travelaround.R;
 import com.renren.ruolan.travelaround.adapter.FragmentArticleAdapter;
 import com.renren.ruolan.travelaround.adapter.FragmentTagAdapter;
-import com.renren.ruolan.travelaround.adapter.TagDetailAdapter;
 import com.renren.ruolan.travelaround.base.BaseAdapter;
 import com.renren.ruolan.travelaround.constant.HttpUrlPath;
 import com.renren.ruolan.travelaround.entity.DiscoveryArticleData;
@@ -37,7 +32,7 @@ import com.renren.ruolan.travelaround.entity.Disvocery;
 import com.renren.ruolan.travelaround.ui.ArticleDetailActivity;
 import com.renren.ruolan.travelaround.ui.MainActivity;
 import com.renren.ruolan.travelaround.ui.TagDetailActivity;
-import com.renren.ruolan.travelaround.widget.CustomPrograss;
+import com.renren.ruolan.travelaround.widget.dialog.CustomPrograss;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
@@ -45,10 +40,6 @@ import java.util.List;
 
 import okhttp3.Call;
 import okhttp3.Response;
-import rx.android.schedulers.AndroidSchedulers;
-
-import static com.baidu.location.b.g.a;
-import static com.baidu.location.b.g.s;
 
 
 /**
@@ -214,22 +205,21 @@ public class DiscoveryFragment extends Fragment {
         OkGo.post(HttpUrlPath.GET_HOME_ARTICLE_LIST)
                 .params("currentPage", index)
                 .params("CityName", cityName)
-                .getCall(StringConvert.create(), RxAdapter.<String>create())
-                .doOnSubscribe(() -> {
-                })
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(s -> {
-                    Type type = new TypeToken<DiscoveryArticleData>() {
-                    }.getType();
-                    DiscoveryArticleData articleData =
-                            new Gson().fromJson(s, type);
-                    List<ArticleListBean> articleList = articleData.getResult().getArticleList();
-                    mArticleList.addAll(articleList);
-                    if (mArticleList != null && mArticleList.size() > 0) {
-                        CustomPrograss.disMiss();
-                        mArticleAdapter.setDatas(mArticleList);
+                .execute(new StringCallback(){
+
+                    @Override
+                    public void onSuccess(String s, Call call, Response response) {
+                        Type type = new TypeToken<DiscoveryArticleData>() {
+                        }.getType();
+                        DiscoveryArticleData articleData =
+                                new Gson().fromJson(s, type);
+                        List<ArticleListBean> articleList = articleData.getResult().getArticleList();
+                        mArticleList.addAll(articleList);
+                        if (mArticleList != null && mArticleList.size() > 0) {
+                            CustomPrograss.disMiss();
+                            mArticleAdapter.setDatas(mArticleList);
+                        }
                     }
-                }, throwable -> {
                 });
 
 

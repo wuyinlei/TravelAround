@@ -17,20 +17,14 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.callback.StringCallback;
-import com.lzy.okgo.convert.StringConvert;
-import com.lzy.okrx.RxAdapter;
 import com.renren.ruolan.travelaround.R;
 import com.renren.ruolan.travelaround.adapter.SelefHotelAdapter;
 import com.renren.ruolan.travelaround.constant.Contants;
 import com.renren.ruolan.travelaround.constant.HttpUrlPath;
-import com.renren.ruolan.travelaround.entity.CityId;
 import com.renren.ruolan.travelaround.entity.SelefHotelData;
 import com.renren.ruolan.travelaround.entity.SelefHotelData.ResultEntity.ProductListEntity;
 import com.renren.ruolan.travelaround.event.CityIdEvent;
 import com.renren.ruolan.travelaround.ui.ProductDetailActivity;
-import com.renren.ruolan.travelaround.ui.TagDetailActivity;
-import com.renren.ruolan.travelaround.utils.ToastUtils;
-import com.renren.ruolan.travelaround.widget.CustomPrograss;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
@@ -41,11 +35,6 @@ import java.util.List;
 
 import okhttp3.Call;
 import okhttp3.Response;
-import rx.android.schedulers.AndroidSchedulers;
-
-import static android.R.attr.type;
-import static com.baidu.location.b.g.d;
-import static com.baidu.location.b.g.s;
 
 
 /**

@@ -54,7 +54,7 @@ public class DetailBean implements Serializable {
         this.errorcode = errorcode;
     }
 
-    public static class ResultEntity {
+    public static class ResultEntity implements Serializable{
         /**
          * productID : 21918
          * title : 顺景温泉
@@ -280,6 +280,13 @@ public class DetailBean implements Serializable {
             private String userImage;
             private String content;
 
+            public CmtListEntity(String userName, String commentDate, String userImage, String content) {
+                this.userName = userName;
+                this.commentDate = commentDate;
+                this.userImage = userImage;
+                this.content = content;
+            }
+
             public String getUserName() {
                 return userName;
             }
@@ -365,7 +372,7 @@ public class DetailBean implements Serializable {
             }
         }
 
-        public static class OptionListEntity {
+        public static class OptionListEntity implements Serializable{
             /**
              * optionID : 209805
              * optionName : [门票] 平日票（不含餐）

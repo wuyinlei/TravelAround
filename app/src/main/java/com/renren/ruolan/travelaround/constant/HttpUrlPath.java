@@ -25,6 +25,8 @@ public class HttpUrlPath {
     //城市列表id  获取酒店信息    CurrentPage
     public static String GET_HOTEL_INFO = "http://api.hifangjia.com/Home/V18/V1801GetProListByCityID.aspx";
 
+    //获取评论详情界面
+    public static String GET_CMT_INFO = "http://api.hifangjia.com/Comment/V1103GetCmtListByProID.aspx";
 
     //http://api.hifangjia.com/Home/V18/V1901Ticket1.aspx   发现界面   SelectCity 北京  CityName  北京
 

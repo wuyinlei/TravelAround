@@ -65,4 +65,8 @@
     <string name="collect_null">没有任何收藏</string>
     <string name="login">登录</string>
 
+    <string name="comment_login">登录后才能评论</string>
+    <string name="comment_empty">评论不能为空</string>
+    <string name="comment_success">添加评论成功</string>
+
 </resources>

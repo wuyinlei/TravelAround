@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_product_cmt"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="com.renren.ruolan.travelaround.ui.ProductCmtActivity">
+
+    <RelativeLayout
+        android:id="@+id/re_ll"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/x50"
+        android:background="@color/divider">
+
+        <ImageView
+            android:id="@+id/img_back"
+            android:layout_width="@dimen/x30"
+            android:layout_height="@dimen/x30"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="@dimen/x10"
+            android:src="@drawable/ic_back_new"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:text="用户评论"
+            android:textSize="@dimen/x20"/>
+    </RelativeLayout>
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recycler_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/re_ll"/>
+
+    <RelativeLayout
+        android:id="@+id/re_add_comment"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/x40"
+        android:layout_alignParentBottom="true"
+        android:background="@color/divider">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="@dimen/x5"
+            android:layout_toLeftOf="@+id/tvcomment"
+            android:text="~~~~~"/>
+
+        <TextView
+            android:id="@+id/tvcomment"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:text="点击添加评论"
+            android:textSize="@dimen/x20"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="@dimen/x5"
+            android:layout_toRightOf="@+id/tvcomment"
+            android:text="~~~~~"/>
+
+    </RelativeLayout>
+
+
+</RelativeLayout>

@@ -13,7 +13,6 @@ import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.TextureView;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -42,7 +41,7 @@ import com.renren.ruolan.travelaround.constant.HttpUrlPath;
 import com.renren.ruolan.travelaround.entity.HomeData;
 import com.renren.ruolan.travelaround.entity.HomeData.ResultEntity.BannerListEntity;
 import com.renren.ruolan.travelaround.entity.HomeData.ResultEntity.CityListEntity;
-import com.renren.ruolan.travelaround.widget.CustomPrograss;
+import com.renren.ruolan.travelaround.widget.dialog.CustomPrograss;
 import com.renren.ruolan.travelaround.widget.SimpleViewPagerIndicator;
 import com.renren.ruolan.travelaround.widget.StickyNavLayout;
 import com.renren.ruolan.travelaround.widget.carousel.FlyBanner;
@@ -346,7 +345,13 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
                                 }
                                 flyBanner.setImagesUrl(imgBanner);
                                 flyBanner.setOnItemClickListener(position -> {
-
+                                    String Platform = "1";
+                                    String ProductID = mBannerListEntities.get(position).getProductID();
+                                    Intent intent = new Intent(getActivity(), ProductDetailActivity.class);
+                                    intent.putExtra(Contants.PLATFORM, Platform);
+                                    intent.putExtra(Contants.PRODUCT_ID, ProductID);
+                                    intent.putExtra(Contants.CITY_NAME, cityName);
+                                    startActivity(intent);
                                 });
                             }
                         }
