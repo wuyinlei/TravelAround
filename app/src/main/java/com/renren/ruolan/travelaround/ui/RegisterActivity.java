@@ -16,6 +16,7 @@ import com.renren.ruolan.travelaround.R;
 import com.renren.ruolan.travelaround.utils.ToastUtils;
 import com.renren.ruolan.travelaround.widget.CheckBox;
 import com.renren.ruolan.travelaround.widget.ClearEditText;
+import com.renren.ruolan.travelaround.widget.dialog.CustomPrograss;
 
 import org.json.JSONObject;
 
@@ -140,11 +141,11 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
         String code = mTxtCountryCode.getText().toString().trim();
         String pwd = mEtPassword.getText().toString().trim();
 
-        checkPhoneNum(phone, code);
+        if (checkPhoneNum(phone, code)) {
+            //not 86   +86
+            SMSSDK.getVerificationCode(code, phone);
 
-        //not 86   +86
-        SMSSDK.getVerificationCode(code, phone);
-
+        }
     }
 
 
@@ -179,6 +180,8 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
             code = code.substring(1);
         }
 
+        CustomPrograss.show(this,getResources().getString(R.string.loading),false,null);
+
         Intent intent = new Intent(this, RegisterSecondActivity.class);
         intent.putExtra("phone", phone);
         intent.putExtra("pwd", pwd);
@@ -187,6 +190,16 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
         startActivity(intent);
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        CustomPrograss.disMiss();
+    }
 
     private String[] getCurrentCountry() {
         String mcc = getMCC();
@@ -218,23 +231,23 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
     /**
      * 检查手机号是否正确
      *
-     * @param phone  手机号码
+     * @param phone 手机号码
      * @param code  国家号
      */
-    private void checkPhoneNum(String phone, String code) {
+    private boolean checkPhoneNum(String phone, String code) {
         if (code.startsWith("+")) {
             code = code.substring(1);
         }
 
         if (TextUtils.isEmpty(phone)) {
             ToastUtils.show(this, getResources().getString(R.string.phone_num_is_not_empty));
-            return;
+            return false;
         }
 
         if (code == "86") {
             if (phone.length() != 11) {
                 ToastUtils.show(this, getResources().getString(R.string.phone_num_length_is_error));
-                return;
+                return false;
             }
         }
         String rule = "^1(3|5|7|8|4)\\d{9}";
@@ -243,8 +256,9 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
 
         if (!m.matches()) {
             ToastUtils.show(this, getResources().getString(R.string.check_your_phone_format));
-            return;
+            return false;
         }
+        return true;
     }
 
 
@@ -260,7 +274,7 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
                     getCode();
                 } else {
                     Toast.makeText(this, getResources()
-                            .getString(R.string.agree_user_argument),
+                                    .getString(R.string.agree_user_argument),
                             Toast.LENGTH_SHORT).show();
                 }
                 break;
