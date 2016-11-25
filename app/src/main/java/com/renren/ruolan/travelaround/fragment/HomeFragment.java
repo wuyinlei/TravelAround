@@ -41,6 +41,7 @@ import com.renren.ruolan.travelaround.constant.HttpUrlPath;
 import com.renren.ruolan.travelaround.entity.HomeData;
 import com.renren.ruolan.travelaround.entity.HomeData.ResultEntity.BannerListEntity;
 import com.renren.ruolan.travelaround.entity.HomeData.ResultEntity.CityListEntity;
+import com.renren.ruolan.travelaround.ui.SearchActivity;
 import com.renren.ruolan.travelaround.widget.dialog.CustomPrograss;
 import com.renren.ruolan.travelaround.widget.SimpleViewPagerIndicator;
 import com.renren.ruolan.travelaround.widget.StickyNavLayout;
@@ -89,6 +90,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
     private String cityName;
 
     private MainActivity mFragmentCallback;
+    private LinearLayout mLlSearch;
 
 
     private String[] urls = new String[]{"V2101Index2.aspx",
@@ -181,12 +183,15 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
 
         // TODO: 2016/11/17 定位城市
         EventBus.getDefault().post(new HomeEvent(cityName, mLatitude, mLongitude));
+
+        mLlSearch = (LinearLayout) view.findViewById(R.id.ll_search);
     }
 
 
     private void initListener() {
         ivAddress.setOnClickListener(this);
         tvAddress.setOnClickListener(this);
+        mLlSearch.setOnClickListener(this);
     }
 
 
@@ -396,6 +401,11 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
             case R.id.tv_address:
                 Intent intent = new Intent(getActivity(), CityActivity.class);
                 startActivity(intent);
+                break;
+            case R.id.ll_search:
+                Intent searchIntent = new Intent(getActivity(),SearchActivity.class);
+                searchIntent.putExtra("CityName",cityName);
+                startActivity(searchIntent);
                 break;
         }
     }

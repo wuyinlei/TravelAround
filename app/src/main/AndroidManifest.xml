@@ -134,6 +134,8 @@
         </activity>
         <activity android:name=".ui.ProductCmtActivity">
         </activity>
+        <activity android:name=".ui.SearchActivity">
+        </activity>
     </application>
 
 </manifest>

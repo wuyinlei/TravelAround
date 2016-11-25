@@ -28,11 +28,14 @@
             android:textColor="#00000f"/>
 
         <LinearLayout
+            android:id="@+id/ll_search"
             android:layout_width="match_parent"
             android:layout_height="35dp"
             android:layout_centerVertical="true"
             android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
             android:layout_toLeftOf="@+id/img_phone"
             android:layout_toRightOf="@+id/tv_address"
             android:background="#999999"
