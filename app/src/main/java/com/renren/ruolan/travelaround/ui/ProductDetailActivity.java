@@ -123,6 +123,8 @@ public class ProductDetailActivity extends BaseActivity implements View.OnClickL
     }
 
 
+    private MyUser mMyUser;
+
     @Override
     public void initData() {
         super.initData();
@@ -309,7 +311,7 @@ public class ProductDetailActivity extends BaseActivity implements View.OnClickL
 
     @Override
     public void initView() {
-
+        mMyUser = BmobUser.getCurrentUser(MyUser.class);
 
         Platform = getIntent().getStringExtra(Contants.PLATFORM);
         ProductID = getIntent().getStringExtra(Contants.PRODUCT_ID);
@@ -407,7 +409,7 @@ public class ProductDetailActivity extends BaseActivity implements View.OnClickL
                 finish();
                 break;
             case R.id.fab_collect:
-                if (BmobUser.getCurrentUser(MyUser.class) != null) {
+                if (mMyUser != null) {
                     collectData();
                 } else {
                     Toast.makeText(this, getResources().getString(R.string.collect_login), Toast.LENGTH_SHORT).show();
@@ -451,6 +453,7 @@ public class ProductDetailActivity extends BaseActivity implements View.OnClickL
         collectData.setProductID(ProductID);
         collectData.setImgurl(imgurl);
         collectData.setTitle(title);
+        collectData.setUsername(mMyUser.getUsername());
         collectData.save(new SaveListener<String>() {
             @Override
             public void done(String s, BmobException e) {

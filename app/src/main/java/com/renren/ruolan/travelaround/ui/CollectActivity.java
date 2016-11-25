@@ -51,7 +51,7 @@ public class CollectActivity extends BaseActivity {
     public void initData() {
         super.initData();
         BmobQuery<CollectData> query = new BmobQuery<CollectData>();
-        String sql = "select * from CollectData";
+        String sql = "select * from CollectData where username=?";
         new BmobQuery<CollectData>().doSQLQuery(sql, new SQLQueryListener<CollectData>() {
             @Override
             public void done(BmobQueryResult<CollectData> bmobQueryResult, BmobException e) {
@@ -67,7 +67,7 @@ public class CollectActivity extends BaseActivity {
                     }
                 }
             }
-        });
+        },mMyUser.getUsername());
     }
 
     @Override

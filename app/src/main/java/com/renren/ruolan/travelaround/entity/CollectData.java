@@ -9,6 +9,7 @@ import cn.bmob.v3.BmobObject;
 public class CollectData extends BmobObject {
     String Platform, ProductID, CityName;  //进行网络请求
     String title, address, imgurl;
+    String username;
 
     public String getPlatform() {
         return Platform;
@@ -56,5 +57,13 @@ public class CollectData extends BmobObject {
 
     public void setImgurl(String imgurl) {
         this.imgurl = imgurl;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public String getUsername() {
+        return username;
     }
 }
