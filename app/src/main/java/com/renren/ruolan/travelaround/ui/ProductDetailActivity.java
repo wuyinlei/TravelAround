@@ -62,7 +62,6 @@ import cn.sharesdk.framework.ShareSDK;
 import rx.android.schedulers.AndroidSchedulers;
 
 
-
 public class ProductDetailActivity extends BaseActivity implements View.OnClickListener {
 
     private String Platform, ProductID, CityName;

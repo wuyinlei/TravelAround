@@ -33,6 +33,7 @@ import com.renren.ruolan.travelaround.entity.SearchDetailInfo.ResultEntity.Produ
 import com.renren.ruolan.travelaround.entity.SearchHistory;
 import com.renren.ruolan.travelaround.entity.SearchInfo;
 import com.renren.ruolan.travelaround.entity.SearchInfo.ResultEntity.SearchListEntity;
+import com.renren.ruolan.travelaround.widget.FullyLinearLayoutManager;
 import com.zhy.view.flowlayout.FlowLayout;
 import com.zhy.view.flowlayout.TagAdapter;
 import com.zhy.view.flowlayout.TagFlowLayout;
@@ -113,11 +114,13 @@ public class SearchActivity extends BaseActivity {
                         .subscribe(s ->{
                             Type type = new TypeToken<SearchDetailInfo>(){}.getType();
                             SearchDetailInfo detailInfo = new Gson().fromJson(s,type);
-                            List<ProductListEntity> productList = detailInfo.getResult().getProductList();
-                            if (productList.size() > 0){
+                            mProductListEntities = detailInfo.getResult().getProductList();
+                            if (mProductListEntities.size() > 0){
+                                mTvCityName.setText(mEtSearch.getText().toString().trim());
                                 mLlOne.setVisibility(View.GONE);
                                 mLlResult.setVisibility(View.VISIBLE);
-                                mProductListEntities.addAll(productList);
+                                //mProductListEntities.clear();
+                                //mProductListEntities.addAll(productList);
                                 mSearchDetailAdapter.setDatas(mProductListEntities);
                             }
                         },throwable -> {});
@@ -176,17 +179,18 @@ public class SearchActivity extends BaseActivity {
                     mSearchListEntities = searchInfo.getResult().getSearchList();
                     if (mSearchListEntities.size() > 0 && mSearchListEntities != null) {
 
-                        List<String> titles = mSearchListEntities
-                                .stream()
-                                .map(SearchListEntity::getKey)
-                                .collect(Collectors.toList());
+                        List<String> titles = new ArrayList<>();
+                        for (SearchListEntity entity : mSearchListEntities) {
+                            titles.add(entity.getKey());
+                        }
+
 
                         mIdFlowlayout.setAdapter(new TagAdapter<String>(titles) {
                             @Override
                             public View getView(FlowLayout parent, int position, String title) {
                                 TextView tv = (TextView) LayoutInflater.from(SearchActivity.this).inflate(R.layout.tv,
                                         mIdFlowlayout, false);
-                                tv.setText(s);
+                                tv.setText(title);
                                 return tv;
                             }
                         });
@@ -210,6 +214,7 @@ public class SearchActivity extends BaseActivity {
                 if (e == null) {
                     List<SearchHistory> list = bmobQueryResult.getResults();
                     if (list != null && list.size() > 0) {
+                        serachHistorys.clear();
                         for (SearchHistory history : list) {
                             serachHistorys.add(history);
                             mTvNone.setVisibility(View.GONE);
@@ -244,7 +249,7 @@ public class SearchActivity extends BaseActivity {
         mTvSearchCount = (TextView) findViewById(R.id.tv_search_count);
         mTvCityName = (TextView) findViewById(R.id.tv_city_name);
         mSearchResultRecyclerView = (RecyclerView) findViewById(R.id.search_result_recycler_view);
-        mSearchResultRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        mSearchResultRecyclerView.setLayoutManager(new FullyLinearLayoutManager(this));
         mSearchResultRecyclerView.setItemAnimator(new DefaultItemAnimator());
         mSearchDetailAdapter = new SearchDetailAdapter(this, mProductListEntities);
         mSearchResultRecyclerView.setAdapter(mSearchDetailAdapter);
