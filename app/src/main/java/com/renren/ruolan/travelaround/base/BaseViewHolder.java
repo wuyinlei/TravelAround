@@ -13,17 +13,23 @@ import android.widget.TextView;
  * Created by Administrator on 2016/10/21.
  */
 
-public class BaseViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+public class BaseViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnLongClickListener {
 
 
     private SparseArray<View> views;
 
     private BaseAdapter.OnItemClickListener mOnItemClickListener ;
 
-    public BaseViewHolder(View itemView, BaseAdapter.OnItemClickListener onItemClickListener){
+    private BaseAdapter.OnLongItemClickListener mOnLongItemClickListener;
+
+    public BaseViewHolder(View itemView,
+                          BaseAdapter.OnItemClickListener onItemClickListener,
+                          BaseAdapter.OnLongItemClickListener longItemClickListener){
         super(itemView);
         itemView.setOnClickListener(this);
+        itemView.setOnLongClickListener(this);
         this.mOnItemClickListener =onItemClickListener;
+        this.mOnLongItemClickListener = longItemClickListener;
         this.views = new SparseArray<>();
     }
 
@@ -66,5 +72,13 @@ public class BaseViewHolder extends RecyclerView.ViewHolder implements View.OnCl
         if (mOnItemClickListener != null) {
             mOnItemClickListener.onItemClick(v,getLayoutPosition());
         }
+    }
+
+    @Override
+    public boolean onLongClick(View view) {
+        if (mOnLongItemClickListener !=null){
+            mOnLongItemClickListener.onLongItemClick(view,getLayoutPosition());
+        }
+        return true;
     }
 }

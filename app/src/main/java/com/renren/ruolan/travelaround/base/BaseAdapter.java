@@ -40,6 +40,12 @@ public abstract class BaseAdapter<T, H extends BaseViewHolder> extends RecyclerV
         void onItemClick(View view, int position);
     }
 
+    private OnLongItemClickListener mOnLongItemClickListener = null;
+
+    public interface OnLongItemClickListener{
+        void onLongItemClick(View view,int position);
+    }
+
 //
 //    @Override
 //    public int getItemViewType(int position) {
@@ -70,7 +76,7 @@ public abstract class BaseAdapter<T, H extends BaseViewHolder> extends RecyclerV
 //            return new FooterViewHolder(view);
 //        }
         View view = LayoutInflater.from(parent.getContext()).inflate(layoutResId, parent, false);
-        BaseViewHolder vh = new BaseViewHolder(view, mOnItemClickListener);
+        BaseViewHolder vh = new BaseViewHolder(view, mOnItemClickListener,mOnLongItemClickListener);
         return vh;
     }
 
@@ -198,9 +204,11 @@ public abstract class BaseAdapter<T, H extends BaseViewHolder> extends RecyclerV
 
     public void setOnItemClickListener(OnItemClickListener listener) {
         this.mOnItemClickListener = listener;
-
     }
 
+    public void setOnLongItemClickListener(OnLongItemClickListener onLongItemClickListener) {
+        mOnLongItemClickListener = onLongItemClickListener;
+    }
 
     class FooterViewHolder extends RecyclerView.ViewHolder {
 
