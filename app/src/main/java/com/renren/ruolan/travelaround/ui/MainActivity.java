@@ -1,7 +1,6 @@
 package com.renren.ruolan.travelaround.ui;
 
 import android.os.Build;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
@@ -9,24 +8,14 @@ import android.widget.LinearLayout;
 import android.widget.TabHost;
 import android.widget.TextView;
 
-import com.baidu.location.BDLocation;
-import com.baidu.location.BDLocationListener;
-import com.baidu.location.LocationClient;
-import com.baidu.location.LocationClientOption;
-import com.baidu.location.Poi;
-import com.baidu.mapapi.map.MapStatus;
-import com.baidu.mapapi.map.MapStatusUpdate;
-import com.baidu.mapapi.map.MapStatusUpdateFactory;
-import com.baidu.mapapi.model.LatLng;
 import com.renren.ruolan.travelaround.BaseActivity;
 import com.renren.ruolan.travelaround.FragmentCallback;
 import com.renren.ruolan.travelaround.R;
 import com.renren.ruolan.travelaround.Tab;
-import com.renren.ruolan.travelaround.constant.Contants;
 import com.renren.ruolan.travelaround.event.HomeLocationEvent;
 import com.renren.ruolan.travelaround.fragment.HomeFragment;
 import com.renren.ruolan.travelaround.fragment.MineFragment;
-import com.renren.ruolan.travelaround.fragment.SelefFragment;
+import com.renren.ruolan.travelaround.fragment.DestinationFragment;
 import com.renren.ruolan.travelaround.fragment.DiscoveryFragment;
 import com.renren.ruolan.travelaround.widget.FragmentTabHost;
 
@@ -34,11 +23,6 @@ import org.greenrobot.eventbus.EventBus;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import android.Manifest;
-
-import static com.baidu.location.b.g.t;
-import static com.renren.ruolan.travelaround.R.id.cityname;
 
 
 public class MainActivity extends BaseActivity implements FragmentCallback {
@@ -106,7 +90,7 @@ public class MainActivity extends BaseActivity implements FragmentCallback {
      */
     private void initTab() {
         Tab home = new Tab(R.string.home, R.drawable.selector_home, HomeFragment.class);
-        Tab hot = new Tab(R.string.selef, R.drawable.selector_selef, SelefFragment.class);
+        Tab hot = new Tab(R.string.selef, R.drawable.selector_selef, DestinationFragment.class);
         Tab category = new Tab(R.string.discovery, R.drawable.selector_discovery, DiscoveryFragment.class);
         Tab cart = new Tab(R.string.mine, R.drawable.selector_mine, MineFragment.class);
 

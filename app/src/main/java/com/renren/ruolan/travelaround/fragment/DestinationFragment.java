@@ -40,12 +40,12 @@ import okhttp3.Response;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class SelefFragment extends Fragment {
+public class DestinationFragment extends Fragment {
 
 
     private SelefHotelAdapter mHotelAdapter;
 
-    public SelefFragment() {
+    public DestinationFragment() {
         // Required empty public constructor
     }
 

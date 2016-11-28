@@ -1,9 +1,11 @@
 package com.renren.ruolan.travelaround.adapter;
 
 import android.content.Context;
+import android.view.View;
 
 import com.bumptech.glide.Glide;
 import com.renren.ruolan.travelaround.R;
+import com.renren.ruolan.travelaround.base.BaseAdapter;
 import com.renren.ruolan.travelaround.base.BaseViewHolder;
 import com.renren.ruolan.travelaround.base.SimpleAdapter;
 import com.renren.ruolan.travelaround.entity.CollectData;
@@ -28,4 +30,5 @@ public class CollectAdapter extends SimpleAdapter<CollectData> {
                 .placeholder(R.drawable.user_nologin)
                 .into(viewHoder.getImageView(R.id.img));
     }
+
 }

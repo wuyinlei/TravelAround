@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
@@ -45,16 +46,6 @@ public abstract class BaseAdapter<T, H extends BaseViewHolder> extends RecyclerV
     public interface OnLongItemClickListener{
         void onLongItemClick(View view,int position);
     }
-
-//
-//    @Override
-//    public int getItemViewType(int position) {
-//
-//        if (position + 1 == getItemCount()) {
-//            return TYPE_FOOTER;
-//        }
-//        return TYPE_NORMAL;
-//    }
 
 
     public BaseAdapter(Context context, int layoutResId) {
@@ -128,6 +119,15 @@ public abstract class BaseAdapter<T, H extends BaseViewHolder> extends RecyclerV
     public void removeItem(T t) {
 
         int position = datas.indexOf(t);
+        datas.remove(position);
+        notifyItemRemoved(position);
+    }
+
+    /**
+     * 从列表中删除某一项
+     * @param position  位置
+     */
+    public void removeItem(int position){
         datas.remove(position);
         notifyItemRemoved(position);
     }

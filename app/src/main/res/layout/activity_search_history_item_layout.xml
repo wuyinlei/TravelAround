@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:orientation="vertical"
               android:layout_width="match_parent"
-              android:layout_height="wrap_content">
+              android:layout_height="@dimen/x40"
+              android:orientation="vertical">
 
     <TextView
         android:id="@+id/tv_history"
-        android:padding="@dimen/x3"
-        android:textSize="@dimen/x18"
-        android:text="北京"
-        android:layout_marginLeft="@dimen/x20"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/x20"
+        android:padding="@dimen/x3"
+        android:text="北京"
+        android:textSize="@dimen/x18"/>
 </LinearLayout>

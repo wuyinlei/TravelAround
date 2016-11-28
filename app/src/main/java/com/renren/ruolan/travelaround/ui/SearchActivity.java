@@ -1,6 +1,7 @@
 package com.renren.ruolan.travelaround.ui;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -13,9 +14,7 @@ import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -24,16 +23,12 @@ import com.lzy.okgo.convert.StringConvert;
 import com.lzy.okrx.RxAdapter;
 import com.renren.ruolan.travelaround.BaseActivity;
 import com.renren.ruolan.travelaround.R;
-import com.renren.ruolan.travelaround.adapter.SearchDetailAdapter;
 import com.renren.ruolan.travelaround.base.BaseViewHolder;
 import com.renren.ruolan.travelaround.base.SimpleAdapter;
 import com.renren.ruolan.travelaround.constant.HttpUrlPath;
-import com.renren.ruolan.travelaround.entity.SearchDetailInfo;
-import com.renren.ruolan.travelaround.entity.SearchDetailInfo.ResultEntity.ProductListEntity;
 import com.renren.ruolan.travelaround.entity.SearchHistory;
 import com.renren.ruolan.travelaround.entity.SearchInfo;
 import com.renren.ruolan.travelaround.entity.SearchInfo.ResultEntity.SearchListEntity;
-import com.renren.ruolan.travelaround.widget.FullyLinearLayoutManager;
 import com.zhy.view.flowlayout.FlowLayout;
 import com.zhy.view.flowlayout.TagAdapter;
 import com.zhy.view.flowlayout.TagFlowLayout;
@@ -41,7 +36,6 @@ import com.zhy.view.flowlayout.TagFlowLayout;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import cn.bmob.v3.BmobQuery;
 import cn.bmob.v3.datatype.BmobQueryResult;
@@ -50,8 +44,6 @@ import cn.bmob.v3.listener.SQLQueryListener;
 import cn.bmob.v3.listener.SaveListener;
 import rx.android.schedulers.AndroidSchedulers;
 
-import static com.baidu.location.b.g.e;
-import static com.baidu.location.b.g.s;
 import static com.renren.ruolan.travelaround.R.id.et_search;
 
 
@@ -64,9 +56,7 @@ public class SearchActivity extends BaseActivity {
     private RecyclerView mRecyclerViewSearch;
     private TextView mTvNone;
     private TagFlowLayout mIdFlowlayout;
-    private LinearLayout mLlResult, mLlOne;
-    private TextView mTvSearchCount;
-    private TextView mTvCityName;
+
     private RecyclerView mSearchResultRecyclerView;
 
     private String CityName;
@@ -75,9 +65,7 @@ public class SearchActivity extends BaseActivity {
     private List<SearchHistory> serachHistorys = new ArrayList<>(); //搜索历史
     private MyHistoryAdapter mHistoryAdapter;
 
-    private List<ProductListEntity> mProductListEntities = new ArrayList<>();
-    private int currentPage= 1;
-    private SearchDetailAdapter mSearchDetailAdapter;
+
 
 
     @Override
@@ -103,28 +91,10 @@ public class SearchActivity extends BaseActivity {
 
                     }
                 });
-                // TODO: 2016/11/25 在这里去请求数据
-                OkGo.post(HttpUrlPath.GET_SEARCH_DETAIL)
-                        .params("Platform",1)
-                        .params("Key",trim)
-                        .params("currentPage",currentPage)
-                        .getCall(StringConvert.create(),RxAdapter.<String>create())
-                        .doOnSubscribe(()->{})
-                        .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe(s ->{
-                            Type type = new TypeToken<SearchDetailInfo>(){}.getType();
-                            SearchDetailInfo detailInfo = new Gson().fromJson(s,type);
-                            mProductListEntities = detailInfo.getResult().getProductList();
-                            if (mProductListEntities.size() > 0){
-                                mTvCityName.setText(mEtSearch.getText().toString().trim());
-                                mLlOne.setVisibility(View.GONE);
-                                mLlResult.setVisibility(View.VISIBLE);
-                                //mProductListEntities.clear();
-                                //mProductListEntities.addAll(productList);
-                                mSearchDetailAdapter.setDatas(mProductListEntities);
-                            }
-                        },throwable -> {});
 
+                Intent intent = new Intent(SearchActivity.this,SearchResultActivity.class);
+                intent.putExtra("key",trim);
+                startActivity(intent);
 
             }
             return false;
@@ -144,12 +114,8 @@ public class SearchActivity extends BaseActivity {
             @Override
             public void afterTextChanged(Editable s) {
                 if (s.toString().trim().length() == 0){
-                    mLlResult.setVisibility(View.INVISIBLE);
-                    mLlOne.setVisibility(View.VISIBLE);
                     requestHistoryData();
                 } else {
-                    mLlResult.setVisibility(View.VISIBLE);
-                    mLlOne.setVisibility(View.GONE);
                 }
             }
         });
@@ -231,7 +197,6 @@ public class SearchActivity extends BaseActivity {
 
         CityName = getIntent().getStringExtra("CityName");
 
-        mLlOne = (LinearLayout) findViewById(R.id.ll_one);
         mEtSearch = (EditText) findViewById(et_search);
         mUserCenterOrderLeft = (ImageView) findViewById(R.id.user_center_order_left);
         mTvTip = (TextView) findViewById(R.id.tv_tip);
@@ -241,18 +206,19 @@ public class SearchActivity extends BaseActivity {
         mRecyclerViewSearch.setItemAnimator(new DefaultItemAnimator());
         mHistoryAdapter = new MyHistoryAdapter(this, serachHistorys);
         mRecyclerViewSearch.setAdapter(mHistoryAdapter);
+        mHistoryAdapter.setOnItemClickListener((view, position) -> {
+            SearchHistory history = serachHistorys.get(position);
+            String key = history.searchKey;
+            Intent intent = new Intent(SearchActivity.this,SearchResultActivity.class);
+            intent.putExtra("key",key);
+            startActivity(intent);
+        });
 
         mTvNone = (TextView) findViewById(R.id.tv_none);
         mIdFlowlayout = (TagFlowLayout) findViewById(R.id.id_flowlayout);
-        mLlResult = (LinearLayout) findViewById(R.id.ll_result);
-        mLlResult.setVisibility(View.INVISIBLE);
-        mTvSearchCount = (TextView) findViewById(R.id.tv_search_count);
-        mTvCityName = (TextView) findViewById(R.id.tv_city_name);
-        mSearchResultRecyclerView = (RecyclerView) findViewById(R.id.search_result_recycler_view);
-        mSearchResultRecyclerView.setLayoutManager(new FullyLinearLayoutManager(this));
-        mSearchResultRecyclerView.setItemAnimator(new DefaultItemAnimator());
-        mSearchDetailAdapter = new SearchDetailAdapter(this, mProductListEntities);
-        mSearchResultRecyclerView.setAdapter(mSearchDetailAdapter);
+
+        //mSearchResultRecyclerView = (RecyclerView) findViewById(R.id.search_result_recycler_view);
+
     }
 
 

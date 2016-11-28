@@ -105,7 +105,7 @@ public class CollectActivity extends BaseActivity {
                     CollectData collectData = mCollectDatas.get(position);
                     // TODO: 2016/11/27 删除收藏逻辑
                     String sql = "select * from CollectData where ProductID = ?";
-                    new BmobQuery<CollectData>().doSQLQuery(new SQLQueryListener<CollectData>() {
+                    new BmobQuery<CollectData>().doSQLQuery(sql,new SQLQueryListener<CollectData>() {
                         @Override
                         public void done(BmobQueryResult<CollectData> bmobQueryResult, BmobException e) {
                             if (e == null) {
@@ -119,8 +119,11 @@ public class CollectActivity extends BaseActivity {
                                         @Override
                                         public void done(BmobException e) {
                                             if (e == null){
-                                                mCollectDatas.remove(position);
-                                                mCollectAdapter.notifyDataSetChanged();
+                                                initData();
+                                               // mCollectAdapter.removeItem(position);
+                                                //mCollectDatas.remove(position);
+                                                //mCollectAdapter.notifyItemRemoved(position);
+                                                //mCollectAdapter.notifyDataSetChanged();
                                                 dialog.dismiss();
                                             } else {
                                                 dialog.dismiss();
@@ -131,10 +134,10 @@ public class CollectActivity extends BaseActivity {
                                 }
                             }
                         }
-                    });
+                    },collectData.getProductID());
 
 
-                }).onNegative((dialog, which) -> dialog.dismiss()));
+                }).onNegative((dialog, which) -> dialog.dismiss()).show());
 
         mMyUser = BmobUser.getCurrentUser(MyUser.class);
     }

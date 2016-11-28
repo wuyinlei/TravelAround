@@ -170,22 +170,23 @@ public class ProductDetailActivity extends BaseActivity implements View.OnClickL
                                 mEtv.setHintTextColor(Color.parseColor("#913242"));
                             }
 
-                            String bgl = "select * from CollectData where ProductID = ?";
-                            new BmobQuery<CollectData>().doSQLQuery(bgl, new SQLQueryListener<CollectData>() {
-                                @Override
-                                public void done(BmobQueryResult<CollectData> bmobQueryResult, BmobException e) {
-                                    if (e == null) {
-                                        List<CollectData> results = bmobQueryResult.getResults();
-                                        if (results != null && results.size() > 0) {
-                                            mFabCollect.setImageResource(R.drawable.custom_detail_collecticon_selected);
-                                        }
-                                    }
-                                }
-                            }, mResultEntities.getProductID());
                         }
                     }
                 }, throwable -> {
                 });
+
+        String bgl = "select * from CollectData where ProductID = ?";
+        new BmobQuery<CollectData>().doSQLQuery(bgl, new SQLQueryListener<CollectData>() {
+            @Override
+            public void done(BmobQueryResult<CollectData> bmobQueryResult, BmobException e) {
+                if (e == null) {
+                    List<CollectData> results = bmobQueryResult.getResults();
+                    if (results != null && results.size() > 0) {
+                        mFabCollect.setImageResource(R.drawable.custom_detail_collecticon_selected);
+                    }
+                }
+            }
+        }, ProductID);
 
         OkGo.post(HttpUrlPath.GET_CITY_MORE_INFO)
                 .params("Platform", Platform)
@@ -340,13 +341,7 @@ public class ProductDetailActivity extends BaseActivity implements View.OnClickL
 
         //放假须知
         mHolidayRecyclerView = (RecyclerView) findViewById(R.id.holiday_recycler_view);
-        mHolidayRecyclerView.setLayoutManager(new MyLayoutManager(this) {
-            @Override
-            public void onMeasure(RecyclerView.Recycler recycler, RecyclerView.State state, int widthSpec, int heightSpec) {
-
-
-            }
-        });
+        mHolidayRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         mHolidayRecyclerView.setItemAnimator(new DefaultItemAnimator());
         mHolidayAdapter = new ProductDetailHolidayAdapter(this, mOtherInfoEntities);
         mHolidayRecyclerView.setAdapter(mHolidayAdapter);

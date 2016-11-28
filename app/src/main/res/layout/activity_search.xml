@@ -164,58 +164,6 @@
                 android:layout_height="match_parent"
                 android:orientation="vertical">
 
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="10dp">
-
-                    <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_centerVertical="true"
-                        android:layout_marginLeft="@dimen/x5"
-                        android:src="@drawable/user_center_order_left"/>
-
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="50dp"
-                        android:layout_marginLeft="@dimen/x10"
-                        android:gravity="left|center_vertical"
-                        android:text="搜索结果"/>
-
-                    <TextView
-                        android:id="@+id/tv_search_count"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentRight="true"
-                        android:layout_centerVertical="true"
-                        android:layout_marginRight="@dimen/x20"
-
-                        android:textColor="@color/primary"/>
-                </RelativeLayout>
-
-                <LinearLayout
-                    android:orientation="horizontal"
-                    android:layout_marginLeft="10dp"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent">
-                    <TextView
-                        android:id="@+id/tv_city_name"
-                        android:textColor="@color/primary"
-                        android:text="@string/beijing"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"/>
-                    <TextView
-                        android:text="相关产品"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"/>
-                </LinearLayout>
-
-                <View
-                    android:background="@color/divider"
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/x1"/>
 
                 <LinearLayout
                     android:layout_weight="33"
