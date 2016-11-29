@@ -169,14 +169,11 @@ public class DiscoveryFragment extends Fragment {
         mArticleAdapter = new FragmentArticleAdapter(getActivity(), mArticleList);
 
         mRecyclerViewDetail.setAdapter(mArticleAdapter);
-        mArticleAdapter.setOnItemClickListener(new BaseAdapter.OnItemClickListener() {
-            @Override
-            public void onItemClick(View view, int position) {
-                Intent intent = new Intent(getActivity(), ArticleDetailActivity.class);
-                intent.putExtra("id", mArticleList.get(position).getArticleID());
-                intent.putExtra("title", mArticleList.get(position).getTitle());
-                startActivity(intent);
-            }
+        mArticleAdapter.setOnItemClickListener((view1, position) -> {
+            Intent intent = new Intent(getActivity(), ArticleDetailActivity.class);
+            intent.putExtra("id", mArticleList.get(position).getArticleID());
+            intent.putExtra("title", mArticleList.get(position).getTitle());
+            startActivity(intent);
         });
         mRecyclerViewDetail.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override

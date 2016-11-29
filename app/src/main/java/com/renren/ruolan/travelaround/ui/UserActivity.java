@@ -236,7 +236,9 @@ public class UserActivity extends BaseActivity implements View.OnClickListener {
                     R.drawable.pop_bg_press));
             layout_close.setBackgroundColor(getResources().getColor(
                     R.color.base_color_text_white));
-            openPic();
+            //openPic();
+            Toast.makeText(this, getResources().getString(R.string.not_open),
+                    Toast.LENGTH_SHORT).show();
 
         });
 

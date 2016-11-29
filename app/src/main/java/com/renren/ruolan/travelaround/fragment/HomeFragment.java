@@ -160,6 +160,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
         flyBanner = (FlyBanner) view.findViewById(R.id.fly_banner);
         recyclerView = (RecyclerView) view.findViewById(R.id.recycler_view);
         indicator = (SimpleViewPagerIndicator) view.findViewById(R.id.id_stickynavlayout_indicator);
+
         viewpager = (ViewPager) view.findViewById(R.id.id_stickynavlayout_viewpager);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false));
         recyclerView.setItemAnimator(new DefaultItemAnimator());
@@ -209,6 +210,8 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
 
             @Override
             public void onPageScrollStateChanged(int state) {
+
+
 
             }
         });

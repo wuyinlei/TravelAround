@@ -11,6 +11,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
@@ -26,6 +27,7 @@ import com.renren.ruolan.travelaround.entity.SelefHotelData.ResultEntity.Product
 import com.renren.ruolan.travelaround.event.CityIdEvent;
 import com.renren.ruolan.travelaround.ui.ProductDetailActivity;
 
+import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
@@ -52,8 +54,9 @@ public class DestinationFragment extends Fragment {
     private String cityID = "18";
     private String cityName;
     private RecyclerView mRecyclerView;
-    private int currentPage  = 1;
-    private int totalPage ;
+    private int currentPage = 1;
+    private int totalPage;
+    private TextView mTvTitle;
 
     private List<ProductListEntity> mProductListEntities = new ArrayList<>();
 
@@ -62,6 +65,7 @@ public class DestinationFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
+        EventBus.getDefault().register(this);
         View view = inflater.inflate(R.layout.fragment_destination, container, false);
         cityName = getActivity().getResources().getString(R.string.beijing);
         initView(view);
@@ -72,8 +76,8 @@ public class DestinationFragment extends Fragment {
     private void initData() {
         OkGo.post(HttpUrlPath.GET_HOTEL_INFO)
                 .params("CityID", cityID)
-                .params("CurrentPage",currentPage)
-                .execute(new StringCallback(){
+                .params("CurrentPage", currentPage)
+                .execute(new StringCallback() {
 
                     @Override
                     public void onSuccess(String s, Call call, Response response) {
@@ -90,6 +94,8 @@ public class DestinationFragment extends Fragment {
     }
 
     private void initView(View view) {
+        mTvTitle = (TextView) view.findViewById(R.id.tv_title);
+        mTvTitle.setText(cityName);
         mRecyclerView = (RecyclerView) view.findViewById(R.id.recycler_view);
         LinearLayoutManager layout = new LinearLayoutManager(getActivity());
         mRecyclerView.setLayoutManager(layout);
@@ -107,8 +113,10 @@ public class DestinationFragment extends Fragment {
 //                    CustomPrograss.show(getActivity(),
 //                            getResources().getString(R.string.loading),
 //                            false, null);
-                    new Handler().postDelayed(() -> {getLoadMoreData();
-                    mHotelAdapter.notifyItemRemoved(mHotelAdapter.getItemCount());}, 1500);
+                    new Handler().postDelayed(() -> {
+                        getLoadMoreData();
+                        mHotelAdapter.notifyItemRemoved(mHotelAdapter.getItemCount());
+                    }, 1500);
                 }
             }
 
@@ -130,8 +138,8 @@ public class DestinationFragment extends Fragment {
     }
 
     private void getLoadMoreData() {
-        currentPage ++;
-        if (currentPage>totalPage){
+        currentPage++;
+        if (currentPage > totalPage) {
             Toast.makeText(getActivity(),
                     getActivity().getResources()
                             .getString(R.string.loading_finish),
@@ -141,8 +149,8 @@ public class DestinationFragment extends Fragment {
 
         OkGo.get(HttpUrlPath.GET_HOTEL_INFO)
                 .params("CityID", cityID)
-                .params("CurrentPage",currentPage)
-                .execute(new StringCallback(){
+                .params("CurrentPage", currentPage)
+                .execute(new StringCallback() {
                     @Override
                     public void onSuccess(String s, Call call, Response response) {
                         Type type = new TypeToken<SelefHotelData>() {
@@ -160,7 +168,6 @@ public class DestinationFragment extends Fragment {
                 });
 
 
-
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
@@ -168,6 +175,7 @@ public class DestinationFragment extends Fragment {
         if (event != null) {
             cityID = event.cityID;
             cityName = event.cityName;
+            mTvTitle.setText(cityName);
             initData(cityID, cityName);
         }
     }
@@ -175,15 +183,15 @@ public class DestinationFragment extends Fragment {
     /**
      * 重新请求数据
      *
-     * @param cityID
-     * @param cityName
+     * @param cityID   cityID
+     * @param cityName cityName
      */
     private void initData(String cityID, String cityName) {
         currentPage = 1;
         OkGo.get(HttpUrlPath.GET_HOTEL_INFO)
                 .params("CityID", cityID)
-                .params("CurrentPage",currentPage)
-                .execute(new StringCallback(){
+                .params("CurrentPage", currentPage)
+                .execute(new StringCallback() {
 
                     @Override
                     public void onSuccess(String s, Call call, Response response) {
@@ -199,4 +207,9 @@ public class DestinationFragment extends Fragment {
                 });
     }
 
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        EventBus.getDefault().unregister(this);
+    }
 }

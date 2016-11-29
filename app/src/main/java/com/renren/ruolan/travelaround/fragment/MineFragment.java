@@ -88,6 +88,13 @@ public class MineFragment extends Fragment implements View.OnClickListener {
         initListener();
         return view;
     }
+//
+//    @Override
+//    public void onResume() {
+//        super.onResume();
+//        mMyUser = BmobUser.getCurrentUser(MyUser.class);
+//        //Toast.makeText(getActivity(), "login", Toast.LENGTH_SHORT).show();
+//    }
 
     private void initListener() {
         mSettingShare.setOnClickListener(this);
@@ -220,10 +227,16 @@ public class MineFragment extends Fragment implements View.OnClickListener {
                 Glide.with(getActivity())
                         .load(event.mMyUser.getImgurl())
                         .asBitmap().into(mUserImg);
+                isUnLogin = false;
+                mMyUser = event.mMyUser;
+                Toast.makeText(getActivity(), "到这了", Toast.LENGTH_SHORT).show();
                 mBtnLogin.setText(getActivity().getResources().getString(R.string.unlogin));
             }
         }
     }
+
+
+
 
 
     @Override
