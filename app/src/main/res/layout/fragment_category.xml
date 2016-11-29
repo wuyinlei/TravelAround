@@ -288,6 +288,35 @@
             </RelativeLayout>
 
             <LinearLayout
+                android:id="@+id/setting_user_detail"
+                android:layout_width="fill_parent"
+                android:layout_height="50.0dip"
+                android:background="@drawable/list_item_selector"
+                android:gravity="center"
+                android:orientation="horizontal"
+                android:paddingLeft="20.0dip">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="用户详情"
+                    android:textColor="@color/black"
+                    android:textSize="15.0sp"/>
+
+                <LinearLayout
+                    android:layout_width="0.0dip"
+                    android:layout_height="fill_parent"
+                    android:layout_weight="1.0"/>
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="10.0dip"
+                    android:background="@drawable/grey_right"/>
+            </LinearLayout>
+
+
+            <LinearLayout
                 android:id="@+id/clear_cache"
                 android:layout_width="fill_parent"
                 android:layout_height="50.0dip"
@@ -315,8 +344,7 @@
                         android:layout_alignParentRight="true"
                         android:layout_centerHorizontal="true"
                         android:layout_centerInParent="true"
-                        android:layout_marginRight="@dimen/x10"
-                        android:text="当前缓存：20.0MB"/>
+                        android:layout_marginRight="@dimen/x10"/>
                 </RelativeLayout>
 
                 <ImageView

@@ -74,5 +74,13 @@
     <string name="tip">提示</string>
     <string name="delete_is_or_not">确定要删除该收藏么?</string>
     <string name="cancek">取消</string>
+    <string name="not_login">您还没有登录，请先登录！！！</string>
+
+
+    <string name="pop_photo">拍照</string>
+    <string name="pop_choose">从相册中选择</string>
+    <string name="pop_close">取消</string>
+
+    <string name="occ_title">职业选择</string>
 
 </resources>

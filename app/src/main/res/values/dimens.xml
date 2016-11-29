@@ -22,4 +22,6 @@
     <dimen name="smallButtonWidth">48.0dip</dimen>
     <dimen name="smallButtonHeight">32.0dip</dimen>
 
+    <dimen name="header_height">280.0dip</dimen>
+    <dimen name="action_left_size" >60.0dip</dimen>
 </resources>

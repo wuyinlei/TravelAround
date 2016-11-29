@@ -24,6 +24,7 @@ import com.renren.ruolan.travelaround.entity.MyUser;
 import com.renren.ruolan.travelaround.event.LoginEvent;
 import com.renren.ruolan.travelaround.ui.CollectActivity;
 import com.renren.ruolan.travelaround.ui.LoginActivity;
+import com.renren.ruolan.travelaround.ui.UserActivity;
 import com.renren.ruolan.travelaround.utils.DataCleanManager;
 import com.renren.ruolan.travelaround.widget.transform.GlideCircleTransform;
 
@@ -69,11 +70,13 @@ public class MineFragment extends Fragment implements View.OnClickListener {
     private LinearLayout mSettingGrade;
     private LinearLayout mSettingShare;
     private LinearLayout mVersionCheck;
+    private LinearLayout mSettingUserDetail;
     private TextView mVersionName;
     private RelativeLayout mReCollect;
     private boolean isUnLogin = false;
 
     private MyUser mMyUser;
+    private String mTotalCacheSize;
 
 
     @Override
@@ -94,6 +97,7 @@ public class MineFragment extends Fragment implements View.OnClickListener {
         mClearCache.setOnClickListener(this);
         mBtnLogin.setOnClickListener(this);
         mReCollect.setOnClickListener(this);
+        mSettingUserDetail.setOnClickListener(this);
     }
 
     private void initData() {
@@ -130,6 +134,13 @@ public class MineFragment extends Fragment implements View.OnClickListener {
         mTvTuijian = (TextView) view.findViewById(R.id.tv_tuijian);
         mClearCache = (LinearLayout) view.findViewById(R.id.clear_cache);
         mCurrentCache = (TextView) view.findViewById(R.id.current_cache);
+        try {
+            mTotalCacheSize = DataCleanManager.getTotalCacheSize(getActivity());
+            if (mTotalCacheSize != null)
+                mCurrentCache.setText(mTotalCacheSize);
+        } catch (Exception e1) {
+            e1.printStackTrace();
+        }
         mSettingOpinion = (LinearLayout) view.findViewById(R.id.setting_opinion);
         mSettingGrade = (LinearLayout) view.findViewById(R.id.setting_grade);
         mSettingShare = (LinearLayout) view.findViewById(R.id.setting_share);
@@ -138,14 +149,16 @@ public class MineFragment extends Fragment implements View.OnClickListener {
         mVersionName = (TextView) view.findViewById(R.id.version_name);
         mUserImg = (ImageView) view.findViewById(R.id.user_img);
 
-        if (mMyUser != null){
+        mSettingUserDetail = (LinearLayout) view.findViewById(R.id.setting_user_detail);
+
+        if (mMyUser != null) {
             isUnLogin = false;
             mTvUnloginNotice.setText(mMyUser.getUsername());
             mUserImg.setVisibility(View.VISIBLE);
             Glide.with(getActivity())
-                        .load(mMyUser.getImgurl())
-                        .asBitmap().transform(new GlideCircleTransform(getActivity())).into(mUserImg);
-                mBtnLogin.setText(getActivity().getResources().getString(R.string.unlogin));
+                    .load(mMyUser.getImgurl())
+                    .asBitmap().transform(new GlideCircleTransform(getActivity())).into(mUserImg);
+            mBtnLogin.setText(getActivity().getResources().getString(R.string.unlogin));
         }
 
 
@@ -197,7 +210,7 @@ public class MineFragment extends Fragment implements View.OnClickListener {
         // siteUrl是分享此内容的网站地址，仅在QQ空间使用
         oks.setSiteUrl("https://github.com/wuyinlei/MyHearts");
 
-// 启动分享GUI
+        // 启动分享GUI
         oks.show(getActivity());
 
 
@@ -207,7 +220,7 @@ public class MineFragment extends Fragment implements View.OnClickListener {
     public void LoginEventRegister(LoginEvent event) {
         if (event != null) {
             mTvUnloginNotice.setText(event.mMyUser.getUsername());
-            if (event.mMyUser.getImgurl() != null){
+            if (event.mMyUser.getImgurl() != null) {
                 Glide.with(getActivity())
                         .load(event.mMyUser.getImgurl())
                         .asBitmap().into(mUserImg);
@@ -239,7 +252,7 @@ public class MineFragment extends Fragment implements View.OnClickListener {
                 if (mBtnLogin.getText().equals(getActivity().getResources().getString(R.string.login))) {
                     Intent intent = new Intent(getActivity(), LoginActivity.class);
                     startActivity(intent);
-                } else if (mBtnLogin.getText().equals(getActivity().getResources().getString(R.string.unlogin))){
+                } else if (mBtnLogin.getText().equals(getActivity().getResources().getString(R.string.unlogin))) {
                     MyUser.logOut();
                     isUnLogin = true;
                     mBtnLogin.setText(getActivity().getResources().getString(R.string.login));
@@ -249,10 +262,21 @@ public class MineFragment extends Fragment implements View.OnClickListener {
                 break;
 
             case R.id.collect_re:
-                if (mMyUser != null && !isUnLogin){
+                if (mMyUser != null && !isUnLogin) {
                     startActivity(new Intent(getActivity(), CollectActivity.class));
                 } else {
                     Toast.makeText(getActivity(), getActivity().getResources().getString(R.string.collect_login), Toast.LENGTH_SHORT).show();
+                    startActivity(new Intent(getActivity(), LoginActivity.class));
+                }
+                break;
+
+            case R.id.setting_user_detail:
+                if (mMyUser != null && !isUnLogin) {
+                    startActivity(new Intent(getActivity(), UserActivity.class));
+                } else {
+                    Toast.makeText(getActivity(),
+                            getActivity().getResources().getString(R.string.not_login),
+                            Toast.LENGTH_SHORT).show();
                     startActivity(new Intent(getActivity(), LoginActivity.class));
                 }
                 break;

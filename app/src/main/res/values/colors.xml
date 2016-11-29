@@ -44,4 +44,16 @@
 
     <color name="grey_normal_bg">#EEEEEE</color>
     <color name="deep_transparent">#bb000000</color>
+    <color name="red_ff986f">#ffff986f</color>
+    <color name="main_content">#fff5f5f5</color>
+    <color name="text_color_blue">#ff65ccce</color>
+
+    <color name="base_color_text_black">#3e3e39</color>
+
+    <color name="base_color_text_white">#ffffff</color>
+    <color name="text_detail_gray">#ff777777</color>
+    <color name="text_red">#ffe7533e</color>
+    <color name="black2">#ff292929</color>
+
+    <color name="dialog_bg">#414141</color>
 </resources>
