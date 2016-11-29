@@ -35,9 +35,6 @@ import org.greenrobot.eventbus.ThreadMode;
 import cn.bmob.v3.BmobUser;
 import cn.sharesdk.framework.ShareSDK;
 
-import static com.baidu.location.b.g.S;
-import static com.baidu.location.b.g.e;
-
 
 /**
  * A simple {@link Fragment} subclass.
@@ -83,7 +80,7 @@ public class MineFragment extends Fragment implements View.OnClickListener {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_category, container, false);
+        View view = inflater.inflate(R.layout.fragment_mine, container, false);
         EventBus.getDefault().register(this);
         mMyUser = BmobUser.getCurrentUser(MyUser.class);
         initView(view);
@@ -178,8 +175,7 @@ public class MineFragment extends Fragment implements View.OnClickListener {
         PackageManager packageManager = getActivity().getPackageManager();
         // getPackageName()是你当前类的包名，0代表是获取版本信息
         PackageInfo packInfo = packageManager.getPackageInfo(getActivity().getPackageName(), 0);
-        String version = packInfo.versionName;
-        return version;
+        return packInfo.versionName;
     }
 
     /**

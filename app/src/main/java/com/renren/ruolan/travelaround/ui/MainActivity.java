@@ -1,6 +1,7 @@
 package com.renren.ruolan.travelaround.ui;
 
 import android.os.Build;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
@@ -8,6 +9,7 @@ import android.widget.LinearLayout;
 import android.widget.TabHost;
 import android.widget.TextView;
 
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.renren.ruolan.travelaround.BaseActivity;
 import com.renren.ruolan.travelaround.FragmentCallback;
 import com.renren.ruolan.travelaround.R;
@@ -90,7 +92,7 @@ public class MainActivity extends BaseActivity implements FragmentCallback {
      */
     private void initTab() {
         Tab home = new Tab(R.string.home, R.drawable.selector_home, HomeFragment.class);
-        Tab hot = new Tab(R.string.selef, R.drawable.selector_selef, DestinationFragment.class);
+        Tab hot = new Tab(R.string.selef, R.drawable.selector_destination, DestinationFragment.class);
         Tab category = new Tab(R.string.discovery, R.drawable.selector_discovery, DiscoveryFragment.class);
         Tab cart = new Tab(R.string.mine, R.drawable.selector_mine, MineFragment.class);
 
@@ -121,6 +123,31 @@ public class MainActivity extends BaseActivity implements FragmentCallback {
 
     }
 
+    long exitTime = 0;
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK && event.getAction() == KeyEvent.ACTION_DOWN){
+            int currentItem = mTabHost.getCurrentTab();
+            if (currentItem == 0){
+                //双击退出逻辑
+                new MaterialDialog.Builder(MainActivity.this)
+                        .title(getResources().getString(R.string.tip))
+                        .content(getResources().getString(R.string.exit))
+                        .negativeText(getResources().getString(R.string.cancel))
+                        .onNegative((dialog, which) -> dialog.dismiss()).positiveText(getResources().getString(R.string.ok))
+                        .onPositive((dialog, which) -> {
+                            finish();
+                            dialog.dismiss();
+                        }).show();
+                return true;
+            } else {
+                mTabHost.setCurrentTab(0);
+                return true;
+            }
+        }
+        return super.onKeyDown(keyCode, event);
+    }
 
     /**
      * 创建indiator

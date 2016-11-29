@@ -9,6 +9,7 @@ import android.os.Environment;
 import android.provider.MediaStore;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -77,6 +78,7 @@ public class UserActivity extends BaseActivity implements View.OnClickListener {
     private MyUser mCurrentUser;
 
     private ImageView mIcBack;
+    private String mPath;
 
 
     @Override
@@ -115,7 +117,7 @@ public class UserActivity extends BaseActivity implements View.OnClickListener {
         mIcBack = (ImageView) findViewById(R.id.ic_back);
         mIcBack.setOnClickListener(this);
 
-        if (mCurrentUser !=null) {
+        if (mCurrentUser != null) {
             updateUi(mCurrentUser);
         }
     }
@@ -139,7 +141,7 @@ public class UserActivity extends BaseActivity implements View.OnClickListener {
         if (!TextUtils.isEmpty(city)) {
             mTvCity.setText(city);
         }
-        if (!TextUtils.isEmpty(blood)){
+        if (!TextUtils.isEmpty(blood)) {
             mTvBloodType.setText(blood);
         }
 
@@ -165,7 +167,7 @@ public class UserActivity extends BaseActivity implements View.OnClickListener {
     @Override
     protected void onResume() {
         super.onResume();
-        if (mCurrentUser!=null){
+        if (mCurrentUser != null) {
             mCurrentUser = MyUser.getCurrentUser(MyUser.class);
         }
     }
@@ -180,7 +182,7 @@ public class UserActivity extends BaseActivity implements View.OnClickListener {
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.et_img_detail:
-                startActivity(new Intent(this,UpdateUserActivity.class));
+                startActivity(new Intent(this, UpdateUserActivity.class));
                 break;
             case R.id.user_detail_avatar:
                 showMyDialog();
@@ -309,26 +311,20 @@ public class UserActivity extends BaseActivity implements View.OnClickListener {
 
         if (resultCode == RESULT_OK) {
             switch (requestCode) {
-                case REQUESTCODE_CAM:
+                case REQUESTCODE_CAM:  //调用相机
                     startPhotoZoom(Uri.fromFile(mFile));
                     break;
-                case REQUESTCODE_PIC:
-
+                case REQUESTCODE_PIC:  //调用相册
                     if (data == null || data.getData() == null) {
                         return;
                     }
-
-
                     startPhotoZoom(data.getData());
-
                     break;
                 case REQUESTCODE_CUT:
-
                     if (data != null) {
                         setPicToView(data);
                     }
                     break;
-
 
             }
         }
@@ -341,23 +337,12 @@ public class UserActivity extends BaseActivity implements View.OnClickListener {
         Bundle bundle = data.getExtras();
         if (bundle != null) {
 
-//
-//            Uri selectedImage = data.getData();
-//
-//            String[] filePathColumn = { MediaStore.Images.Media.DATA };
-//
-//            Cursor cursor = getContentResolver().query(selectedImage,
-//                    filePathColumn, null, null, null);
-//            cursor.moveToFirst();
-//
-//            int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
-//            String picturePath = cursor.getString(columnIndex);
-//
-
             //这里也可以做文件上传
             mBitmap = bundle.getParcelable("data");
             // ivHead.setImageBitmap(mBitmap);
-
+            // bundle.get
+            //  String path1 = data.getData().getPath();
+            // Log.d("UserActivity", "pic path------->" +path1);
             mIvAvator.setImageBitmap(mBitmap);
             String path = "";
 //
@@ -365,56 +350,56 @@ public class UserActivity extends BaseActivity implements View.OnClickListener {
 //                path = picturePath;
 //            }
 
-            if (mFile != null)
+            if (mFile != null) {
                 path = mFile.getPath();
 
-            //// TODO: 2016/11/29 需要压缩一下
+                //// TODO: 2016/11/29 需要压缩一下
 
-            CustomPrograss.show(this,getResources().getString(R.string.updating),false,null);
+                CustomPrograss.show(this, getResources().getString(R.string.updating), false, null);
 
-            final BmobFile bmobFile = new BmobFile(new File(path));
-            //Bmob这个上传文件的貌似不成功..........................
-            bmobFile.uploadblock(new UploadFileListener() {
+                final BmobFile bmobFile = new BmobFile(new File(path));
+                //Bmob这个上传文件的貌似不成功..........................
+                bmobFile.uploadblock(new UploadFileListener() {
 
-                @Override
-                public void onProgress(Integer value) {
-                    super.onProgress(value);
+                    @Override
+                    public void onProgress(Integer value) {
+                        super.onProgress(value);
 
-                }
-
-                @Override
-                public void done(BmobException e) {
-                    if (e == null) {
-                        CustomPrograss.disMiss();
-                        Toast.makeText(UserActivity.this, "pic is success", Toast.LENGTH_SHORT).show();
-                        // MyUser myUser =MyUser.getCurrentUser(MyUser.class);
-                        //得到上传的图片地址
-                        String fileUrl = bmobFile.getFileUrl();
-                        mCurrentUser.setImgurl(fileUrl);
-                        //更新图片地址
-                        mCurrentUser.update(mCurrentUser.getObjectId(), new UpdateListener() {
-                            @Override
-                            public void done(BmobException e) {
-                                if (e == null) {
-                                    Toast.makeText(UserActivity.this, "update", Toast.LENGTH_SHORT).show();
-
-                                }
-                            }
-                        });
-                    } else {
-                        Toast.makeText(UserActivity.this, "update pic failed", Toast.LENGTH_SHORT).show();
-                        CustomPrograss.disMiss();
                     }
-                }
-            });
 
+                    @Override
+                    public void done(BmobException e) {
+                        if (e == null) {
+                            CustomPrograss.disMiss();
+                            Toast.makeText(UserActivity.this, "pic is success", Toast.LENGTH_SHORT).show();
+                            // MyUser myUser =MyUser.getCurrentUser(MyUser.class);
+                            //得到上传的图片地址
+                            String fileUrl = bmobFile.getFileUrl();
+                            mCurrentUser.setImgurl(fileUrl);
+                            //更新图片地址
+                            mCurrentUser.update(mCurrentUser.getObjectId(), new UpdateListener() {
+                                @Override
+                                public void done(BmobException e) {
+                                    if (e == null) {
+                                        Toast.makeText(UserActivity.this, "update", Toast.LENGTH_SHORT).show();
+
+                                    }
+                                }
+                            });
+                        } else {
+                            Toast.makeText(UserActivity.this, "update pic failed", Toast.LENGTH_SHORT).show();
+                            CustomPrograss.disMiss();
+                        }
+                    }
+                });
+            }
         }
     }
 
     /**
      * 打开系统图片裁剪功能
      *
-     * @param uri  uri
+     * @param uri uri
      */
     private void startPhotoZoom(Uri uri) {
         Intent intent = new Intent("com.android.camera.action.CROP");

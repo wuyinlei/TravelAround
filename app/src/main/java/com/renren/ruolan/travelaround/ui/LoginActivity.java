@@ -21,6 +21,7 @@ import com.renren.ruolan.travelaround.entity.MyUser;
 import com.renren.ruolan.travelaround.event.LoginEvent;
 import com.renren.ruolan.travelaround.utils.PreferencesUtils;
 import com.renren.ruolan.travelaround.widget.CheckBox;
+import com.renren.ruolan.travelaround.widget.dialog.CustomPrograss;
 
 import org.greenrobot.eventbus.EventBus;
 import org.json.JSONException;
@@ -101,18 +102,21 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
         final BmobUser bmobUser = new BmobUser();
         bmobUser.setUsername(name);
         bmobUser.setPassword(pwd);
-        
+        CustomPrograss.show(this,getResources().getString(R.string.loading),false,null);
         bmobUser.login(new SaveListener<MyUser>() {
             @Override
             public void done(MyUser myUser, BmobException e) {
                 if (e == null){
+                    CustomPrograss.disMiss();
                     Toast.makeText(LoginActivity.this,
                             getResources().getString(R.string.login_success),
                             Toast.LENGTH_SHORT).show();
 
                     if (!mIsPasswordMemory.isChecked()) {  //如果用户没有点击记住密码  那就清除密码
+                        PreferencesUtils.putBoolean(LoginActivity.this,"is_select",false);
                         PreferencesUtils.putString(LoginActivity.this, Contants.USER_PASSWORD, "");
                     } else { //否则就保存密码
+                        PreferencesUtils.putBoolean(LoginActivity.this,"is_select",true);
                         PreferencesUtils.putString(LoginActivity.this, Contants.USER_PASSWORD, pwd);
                     }
 
@@ -169,13 +173,14 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
         mEtPhone = (EditText) findViewById(R.id.et_phone);
         mEtPassword = (EditText) findViewById(R.id.et_password);
         mIsPasswordMemory = (CheckBox) findViewById(R.id.is_password_memory);
+        boolean isSelect = PreferencesUtils.getBoolean(this, "is_select");
+        mIsPasswordMemory.setChecked(isSelect);
         mTvForgetPassword = (TextView) findViewById(R.id.tv_forget_password);
         mRegisterAccount = (TextView) findViewById(R.id.register_account);
         mApplicationConsultant = (TextView) findViewById(R.id.application_consultant);
         mQqLogin = (ImageView) findViewById(R.id.qq_login);
         mSinaLogin = (ImageView) findViewById(R.id.sina_login);
         mWxLogin = (ImageView) findViewById(R.id.wx_login);
-
 
     }
 

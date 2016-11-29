@@ -82,5 +82,7 @@
     <string name="pop_close">取消</string>
 
     <string name="occ_title">职业选择</string>
+    <string name="exit">确认退出吗？</string>
+    <string name="cancel">取消</string>
 
 </resources>
