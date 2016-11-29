@@ -4,6 +4,8 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
+import com.renren.ruolan.travelaround.R;
+
 
 /**
  * Created by Administrator on 2016/10/20.
@@ -231,7 +233,8 @@ public class PreferencesUtils {
     }
 
     public static String getCityName(Context context) {
-        return PreferenceManager.getDefaultSharedPreferences(context).getString("cityName", "北京");
+        return PreferenceManager.getDefaultSharedPreferences(context).getString("cityName", context
+        .getResources().getString(R.string.beijing));
     }
 
     /**

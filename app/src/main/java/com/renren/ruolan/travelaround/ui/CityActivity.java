@@ -1,5 +1,6 @@
 package com.renren.ruolan.travelaround.ui;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
@@ -29,6 +30,7 @@ import com.renren.ruolan.travelaround.entity.RegionInfo;
 import com.renren.ruolan.travelaround.event.LocationEvent;
 import com.renren.ruolan.travelaround.utils.KeyBoard;
 import com.renren.ruolan.travelaround.utils.PinyinComparator;
+import com.renren.ruolan.travelaround.utils.PreferencesUtils;
 import com.renren.ruolan.travelaround.widget.city.ClearCityEditText;
 import com.renren.ruolan.travelaround.widget.city.SideBar;
 
@@ -196,8 +198,9 @@ public class CityActivity extends BaseActivity implements OnGetGeoCoderResultLis
 //                 //   Log.d("wuyinlei", "mLatitude:" + mLatitude);
 //                   // Toast.makeText(this, "mLatitude:" + mLatitude, Toast.LENGTH_SHORT).show();
 //                    EventBus.getDefault().post(new LocationEvent(cityName1,mLatitude,mLongitude));
-//                    // Intent intent = new Intent();
-//                    // setResult(100, intent); //返回数据
+                    PreferencesUtils.saveCityName(CityActivity.this, cityName1);
+                    Intent intent = new Intent();
+                    setResult(100, intent); //返回数据
 //                    new Handler().postDelayed(() -> finish(), 500);
                 } else {
                     Toast.makeText(this,
@@ -205,8 +208,8 @@ public class CityActivity extends BaseActivity implements OnGetGeoCoderResultLis
                             Toast.LENGTH_SHORT).show();
                 }
 
-                // PreferencesUtils.saveCityName(CityActivity.this, cityName1);
-                //  Intent intent = new Intent();
+
+                  //Intent intent = new Intent();
                 //  setResult(100, intent);
                 //new Handler().postDelayed(() -> finish(), 500);
             }
@@ -356,10 +359,11 @@ public class CityActivity extends BaseActivity implements OnGetGeoCoderResultLis
         if (isFind) {
 
             EventBus.getDefault().post(new LocationEvent(cityName1, mLatitude, mLongitude));
-            // Intent intent = new Intent();
-            // setResult(100, intent); //返回数据
+            PreferencesUtils.saveCityName(CityActivity.this, cityName1);
+            Intent intent = new Intent();
+            setResult(100, intent); //返回数据
             finish();
-          //  new Handler().postDelayed(() -> finish(), 500);
+            //  new Handler().postDelayed(() -> finish(), 500);
             isFind = false;
 
         }

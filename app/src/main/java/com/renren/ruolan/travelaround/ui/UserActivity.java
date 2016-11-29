@@ -26,6 +26,7 @@ import com.renren.ruolan.travelaround.BaseActivity;
 import com.renren.ruolan.travelaround.R;
 import com.renren.ruolan.travelaround.entity.MyUser;
 import com.renren.ruolan.travelaround.widget.CircleImageView;
+import com.renren.ruolan.travelaround.widget.dialog.CustomPrograss;
 import com.renren.ruolan.travelaround.widget.transform.GlideCircleTransform;
 
 import org.greenrobot.eventbus.EventBus;
@@ -356,6 +357,7 @@ public class UserActivity extends BaseActivity implements View.OnClickListener {
             //这里也可以做文件上传
             mBitmap = bundle.getParcelable("data");
             // ivHead.setImageBitmap(mBitmap);
+
             mIvAvator.setImageBitmap(mBitmap);
             String path = "";
 //
@@ -368,13 +370,22 @@ public class UserActivity extends BaseActivity implements View.OnClickListener {
 
             //// TODO: 2016/11/29 需要压缩一下
 
+            CustomPrograss.show(this,getResources().getString(R.string.updating),false,null);
+
             final BmobFile bmobFile = new BmobFile(new File(path));
             //Bmob这个上传文件的貌似不成功..........................
             bmobFile.uploadblock(new UploadFileListener() {
 
                 @Override
+                public void onProgress(Integer value) {
+                    super.onProgress(value);
+
+                }
+
+                @Override
                 public void done(BmobException e) {
                     if (e == null) {
+                        CustomPrograss.disMiss();
                         Toast.makeText(UserActivity.this, "pic is success", Toast.LENGTH_SHORT).show();
                         // MyUser myUser =MyUser.getCurrentUser(MyUser.class);
                         //得到上传的图片地址
@@ -390,6 +401,9 @@ public class UserActivity extends BaseActivity implements View.OnClickListener {
                                 }
                             }
                         });
+                    } else {
+                        Toast.makeText(UserActivity.this, "update pic failed", Toast.LENGTH_SHORT).show();
+                        CustomPrograss.disMiss();
                     }
                 }
             });
