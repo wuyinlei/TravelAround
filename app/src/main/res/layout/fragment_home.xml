@@ -48,12 +48,13 @@
                 android:layout_marginLeft="10dp"
                 android:background="@drawable/home_search_icon"/>
 
-            <EditText
+            <TextView
                 android:id="@+id/editText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:background="@null"
+                android:layout_marginLeft="@dimen/x10"
                 android:gravity="center|left"
                 android:hint="这个周末想玩点什么"
                 android:textColorHint="@color/white"

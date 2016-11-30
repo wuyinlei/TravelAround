@@ -208,9 +208,9 @@ public class CityActivity extends BaseActivity implements OnGetGeoCoderResultLis
                     setResult(100, intent); //返回数据
 //                    new Handler().postDelayed(() -> finish(), 500);
                 } else {
-                    Toast.makeText(this,
-                            getResources().getString(R.string.sorry_not_find),
-                            Toast.LENGTH_SHORT).show();
+//                    Toast.makeText(this,
+//                            getResources().getString(R.string.sorry_not_find),
+//                            Toast.LENGTH_SHORT).show();
                 }
 
 
@@ -354,6 +354,7 @@ public class CityActivity extends BaseActivity implements OnGetGeoCoderResultLis
 //                    .show();
 
 
+            //可能存在定位失败，找不到经纬度，那么这里就在网络请求一次定位接口，通过传入的城市来获取到经纬度
             String url = HttpUrlPath.GET_LON_AND_LAT + cityName1;
 
             OkGo.get(url)
@@ -395,9 +396,9 @@ public class CityActivity extends BaseActivity implements OnGetGeoCoderResultLis
     @Override
     public void onGetReverseGeoCodeResult(ReverseGeoCodeResult result) {
         if (result == null || result.error != SearchResult.ERRORNO.NO_ERROR) {
-            Toast.makeText(this,
-                    getResources().getString(R.string.sorry_not_find), Toast.LENGTH_LONG)
-                    .show();
+//            Toast.makeText(this,
+//                    getResources().getString(R.string.sorry_not_find), Toast.LENGTH_LONG)
+//                    .show();
             return;
         }
         Toast.makeText(this, result.getAddress(),

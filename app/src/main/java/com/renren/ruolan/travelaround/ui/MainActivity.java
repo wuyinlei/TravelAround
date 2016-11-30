@@ -1,6 +1,7 @@
 package com.renren.ruolan.travelaround.ui;
 
 import android.os.Build;
+import android.support.annotation.NonNull;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,6 +10,7 @@ import android.widget.LinearLayout;
 import android.widget.TabHost;
 import android.widget.TextView;
 
+import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.renren.ruolan.travelaround.BaseActivity;
 import com.renren.ruolan.travelaround.FragmentCallback;
@@ -135,10 +137,18 @@ public class MainActivity extends BaseActivity implements FragmentCallback {
                         .title(getResources().getString(R.string.tip))
                         .content(getResources().getString(R.string.exit))
                         .negativeText(getResources().getString(R.string.cancel))
-                        .onNegative((dialog, which) -> dialog.dismiss()).positiveText(getResources().getString(R.string.ok))
-                        .onPositive((dialog, which) -> {
-                            finish();
-                            dialog.dismiss();
+                        .onNegative(new MaterialDialog.SingleButtonCallback() {
+                            @Override
+                            public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                                dialog.dismiss();
+                            }
+                        }).positiveText(getResources().getString(R.string.ok))
+                        .onPositive(new MaterialDialog.SingleButtonCallback() {
+                            @Override
+                            public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                                finish();
+                                dialog.dismiss();
+                            }
                         }).show();
                 return true;
             } else {

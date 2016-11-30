@@ -8,6 +8,7 @@ import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,6 +22,7 @@ import android.widget.Toast;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.lzy.okgo.OkGo;
+import com.lzy.okgo.callback.StringCallback;
 import com.lzy.okgo.convert.StringConvert;
 import com.lzy.okrx.RxAdapter;
 import com.renren.ruolan.travelaround.BaseActivity;
@@ -41,11 +43,18 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
+import cn.bmob.v3.BmobBatch;
+import cn.bmob.v3.BmobObject;
 import cn.bmob.v3.BmobQuery;
+import cn.bmob.v3.datatype.BatchResult;
+import cn.bmob.v3.datatype.BmobPointer;
 import cn.bmob.v3.datatype.BmobQueryResult;
 import cn.bmob.v3.exception.BmobException;
+import cn.bmob.v3.listener.QueryListListener;
 import cn.bmob.v3.listener.SQLQueryListener;
 import cn.bmob.v3.listener.SaveListener;
+import okhttp3.Call;
+import okhttp3.Response;
 import rx.android.schedulers.AndroidSchedulers;
 
 import static android.R.attr.data;
@@ -56,7 +65,7 @@ import static com.renren.ruolan.travelaround.R.id.view_offset_helper;
 public class SearchActivity extends BaseActivity {
 
     private EditText mEtSearch;
-    private ImageView mUserCenterOrderLeft;
+    private ImageView mUserCenterOrderLeft,mImgBack;
     private TextView mTvTip;
     private TextView mTvClear;
     private RecyclerView mRecyclerViewSearch;
@@ -71,7 +80,7 @@ public class SearchActivity extends BaseActivity {
     private List<SearchHistory> serachHistorys = new ArrayList<>(); //搜索历史
     private MyHistoryAdapter mHistoryAdapter;
 
-
+    private List<String> mObjectIds = new ArrayList<>();
 
 
     @Override
@@ -98,8 +107,8 @@ public class SearchActivity extends BaseActivity {
                     }
                 });
 
-                Intent intent = new Intent(SearchActivity.this,SearchResultActivity.class);
-                intent.putExtra("key",trim);
+                Intent intent = new Intent(SearchActivity.this, SearchResultActivity.class);
+                intent.putExtra("key", trim);
                 startActivity(intent);
 
             }
@@ -119,7 +128,7 @@ public class SearchActivity extends BaseActivity {
 
             @Override
             public void afterTextChanged(Editable s) {
-                if (s.toString().trim().length() == 0){
+                if (s.toString().trim().length() == 0) {
                     requestHistoryData();
                 } else {
                 }
@@ -127,8 +136,72 @@ public class SearchActivity extends BaseActivity {
         });
 
         mTvClear.setOnClickListener(view -> {
-
+            deleteSearchKey();
         });
+    }
+
+    private void deleteSearchKey() {
+        if (mObjectIds != null && mObjectIds.size() > 0) {
+            List<BmobObject> searchHistories = new ArrayList<>();
+            //SearchHistory history = new SearchHistory();
+//            for (String objectId : mObjectIds) {
+//                history.setObjectId(objectId);
+//                searchHistories.add(history);
+//            }
+            int size = mObjectIds.size();
+            for (int i = 0; i < size; i++) {
+                SearchHistory history = new SearchHistory();
+                history.setObjectId(mObjectIds.get(i));
+                searchHistories.add(history);
+            }
+
+            if (searchHistories.size() > 0 && searchHistories != null) {
+
+                BmobBatch bmobBatch = new BmobBatch();
+                bmobBatch.deleteBatch(searchHistories);
+                bmobBatch.doBatch(new QueryListListener<BatchResult>() {
+                    @Override
+                    public void done(List<BatchResult> list, BmobException e) {
+                        if (e == null) {
+
+                            int count = 0;
+
+                            for (int i = 0; i < list.size(); i++) {
+
+                                BatchResult result = list.get(i);
+                                BmobException ex = result.getError();
+                                if (ex == null) {
+                                    count++;
+                                    Log.d(TAG, "delete " + i + " position success");
+                                } else {
+                                    Log.d(TAG, "delete " + i +
+                                            " position failed , the reason is " +
+                                            ex.getErrorCode());
+                                }
+                            }
+                            if (count == list.size()){
+                                //删除完全
+                               // requestHistoryData();
+                                mRecyclerViewSearch.setVisibility(View.GONE);
+                                mTvNone.setVisibility(View.VISIBLE);
+                            }
+                        } else {
+                            Log.d(TAG, "delete failed " + e.getMessage() + " error code is "
+                                    + e.getErrorCode());
+                        }
+                    }
+                });
+
+//                new BmobBatch().deleteBatch(searchHistories).doBatch(new QueryListListener<BatchResult>() {
+//                    @Override
+//                    public void done(List<BatchResult> list, BmobException e) {
+//
+//                    }
+//                });
+            }
+
+        }
+
     }
 
     @Override
@@ -136,48 +209,46 @@ public class SearchActivity extends BaseActivity {
         super.initData();
         if (TextUtils.isEmpty(CityName))
             return;
-        CityName = CityName.replace(getResources().getString(R.string.town),"");
+        CityName = CityName.replace(getResources().getString(R.string.town), "");
         OkGo.post(HttpUrlPath.GET_SEARCH_KEY_INTO)
                 .params("CityName", CityName)
                 .params("Platform", 1)
-                .getCall(StringConvert.create(), RxAdapter.<String>create())
-                .doOnSubscribe(() -> {
-                })
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(s -> {
-                    Type type = new TypeToken<SearchInfo>() {
-                    }.getType();
-                    SearchInfo searchInfo = new Gson().fromJson(s, type);
-                    mSearchListEntities = searchInfo.getResult().getSearchList();
-                    if (mSearchListEntities.size() > 0 && mSearchListEntities != null) {
+                .execute(new StringCallback() {
 
-                        List<String> titles = new ArrayList<>();
-                        for (SearchListEntity entity : mSearchListEntities) {
-                            titles.add(entity.getKey());
-                        }
+                    @Override
+                    public void onSuccess(String s, Call call, Response response) {
+                        Type type = new TypeToken<SearchInfo>() {
+                        }.getType();
+                        SearchInfo searchInfo = new Gson().fromJson(s, type);
+                        mSearchListEntities = searchInfo.getResult().getSearchList();
+                        if (mSearchListEntities.size() > 0 && mSearchListEntities != null) {
 
-
-                        mIdFlowlayout.setAdapter(new TagAdapter<String>(titles) {
-                            @Override
-                            public View getView(FlowLayout parent, int position, String title) {
-                                TextView tv = (TextView) LayoutInflater.from(SearchActivity.this).inflate(R.layout.tv,
-                                        mIdFlowlayout, false);
-                                tv.setTextSize(16);
-                                tv.setText(title);
-                                return tv;
+                            List<String> titles = new ArrayList<>();
+                            for (SearchListEntity entity : mSearchListEntities) {
+                                titles.add(entity.getKey());
                             }
-                        });
 
-                        mIdFlowlayout.setOnTagClickListener((view, position, parent) -> {
-                            String key = titles.get(position);
-                            Intent intent = new Intent(SearchActivity.this,SearchResultActivity.class);
-                            intent.putExtra("key",key);
-                            startActivity(intent);
-                            return true;
-                        });
 
+                            mIdFlowlayout.setAdapter(new TagAdapter<String>(titles) {
+                                @Override
+                                public View getView(FlowLayout parent, int position, String title) {
+                                    TextView tv = (TextView) LayoutInflater.from(SearchActivity.this).inflate(R.layout.tv,
+                                            mIdFlowlayout, false);
+                                    tv.setTextSize(16);
+                                    tv.setText(title);
+                                    return tv;
+                                }
+                            });
+
+                            mIdFlowlayout.setOnTagClickListener((view, position, parent) -> {
+                                String key = titles.get(position);
+                                Intent intent = new Intent(SearchActivity.this, SearchResultActivity.class);
+                                intent.putExtra("key", key);
+                                startActivity(intent);
+                                return true;
+                            });
+                        }
                     }
-                }, throwable -> {
                 });
 
         requestHistoryData();
@@ -197,10 +268,13 @@ public class SearchActivity extends BaseActivity {
                     List<SearchHistory> list = bmobQueryResult.getResults();
                     if (list != null && list.size() > 0) {
                         serachHistorys.clear();
+                        mObjectIds.clear();
                         for (SearchHistory history : list) {
+                            mRecyclerViewSearch.setVisibility(View.VISIBLE);
                             serachHistorys.add(history);
                             mTvNone.setVisibility(View.GONE);
                             mHistoryAdapter.setSearchHistories(serachHistorys);
+                            mObjectIds.add(history.getObjectId());
                         }
                     }
                 }
@@ -218,24 +292,32 @@ public class SearchActivity extends BaseActivity {
         mTvTip = (TextView) findViewById(R.id.tv_tip);
         mTvClear = (TextView) findViewById(R.id.tv_clear);
         mRecyclerViewSearch = (RecyclerView) findViewById(R.id.recycler_view_search);
+        mRecyclerViewSearch.setVisibility(View.VISIBLE);
         mRecyclerViewSearch.setLayoutManager(new LinearLayoutManager(this));
         mRecyclerViewSearch.setItemAnimator(new DefaultItemAnimator());
         mHistoryAdapter = new MyHistoryAdapter();
         mRecyclerViewSearch.setAdapter(mHistoryAdapter);
-        mHistoryAdapter.setOnItemClick((view, position,data) -> {
+        mHistoryAdapter.setOnItemClick((view, position, data) -> {
             String key = data.searchKey;
-            Intent intent = new Intent(SearchActivity.this,SearchResultActivity.class);
-            intent.putExtra("key",key);
+            Intent intent = new Intent(SearchActivity.this, SearchResultActivity.class);
+            intent.putExtra("key", key);
             startActivity(intent);
         });
 
         mTvNone = (TextView) findViewById(R.id.tv_none);
         mIdFlowlayout = (TagFlowLayout) findViewById(R.id.id_flowlayout);
 
+        mImgBack = (ImageView) findViewById(R.id.img_back);
+        mImgBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                finish();
+            }
+        });
+
         //mSearchResultRecyclerView = (RecyclerView) findViewById(R.id.search_result_recycler_view);
 
     }
-
 
 
 }

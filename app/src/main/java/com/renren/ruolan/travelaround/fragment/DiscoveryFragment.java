@@ -23,7 +23,6 @@ import com.lzy.okgo.callback.StringCallback;
 import com.renren.ruolan.travelaround.R;
 import com.renren.ruolan.travelaround.adapter.FragmentArticleAdapter;
 import com.renren.ruolan.travelaround.adapter.FragmentTagAdapter;
-import com.renren.ruolan.travelaround.base.BaseAdapter;
 import com.renren.ruolan.travelaround.constant.HttpUrlPath;
 import com.renren.ruolan.travelaround.entity.DiscoveryArticleData;
 import com.renren.ruolan.travelaround.entity.DiscoveryArticleData.ResultBean.ArticleListBean;
@@ -33,7 +32,6 @@ import com.renren.ruolan.travelaround.entity.Disvocery;
 import com.renren.ruolan.travelaround.ui.ArticleDetailActivity;
 import com.renren.ruolan.travelaround.ui.MainActivity;
 import com.renren.ruolan.travelaround.ui.TagDetailActivity;
-import com.renren.ruolan.travelaround.widget.dialog.CustomPrograss;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;

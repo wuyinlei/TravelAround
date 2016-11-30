@@ -19,6 +19,7 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.hymane.expandtextview.ExpandTextView;
 import com.lzy.okgo.OkGo;
+import com.lzy.okgo.callback.StringCallback;
 import com.lzy.okgo.convert.StringConvert;
 import com.lzy.okrx.RxAdapter;
 import com.renren.ruolan.travelaround.BaseActivity;
@@ -59,6 +60,8 @@ import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.SQLQueryListener;
 import cn.bmob.v3.listener.SaveListener;
 import cn.sharesdk.framework.ShareSDK;
+import okhttp3.Call;
+import okhttp3.Response;
 import rx.android.schedulers.AndroidSchedulers;
 
 
@@ -192,19 +195,18 @@ public class ProductDetailActivity extends BaseActivity implements View.OnClickL
                 .params("Platform", Platform)
                 .params("ProductID", ProductID)
                 .params("CityName", CityName)
-                .getCall(StringConvert.create(), RxAdapter.<String>create())
-                .doOnSubscribe(() -> {
-                })
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(s -> {
-                    Type type = new TypeToken<MoreDataDetail>() {
-                    }.getType();
-                    MoreDataDetail detail = new Gson().fromJson(s, type);
-                    if (detail.getStatus().equals("0")) {
-                        mDetailListEntities = detail.getResult().getDetailList();
-                        mMoreDataAdapter.setDatas(mDetailListEntities);
+                .execute(new StringCallback(){
+
+                    @Override
+                    public void onSuccess(String s, Call call, Response response) {
+                        Type type = new TypeToken<MoreDataDetail>() {
+                        }.getType();
+                        MoreDataDetail detail = new Gson().fromJson(s, type);
+                        if (detail.getStatus().equals("0")) {
+                            mDetailListEntities = detail.getResult().getDetailList();
+                            mMoreDataAdapter.setDatas(mDetailListEntities);
+                        }
                     }
-                }, throwable -> {
                 });
     }
 

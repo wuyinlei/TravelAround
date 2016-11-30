@@ -229,7 +229,7 @@ public class MineFragment extends Fragment implements View.OnClickListener {
                         .asBitmap().into(mUserImg);
                 isUnLogin = false;
                 mMyUser = event.mMyUser;
-                Toast.makeText(getActivity(), "到这了", Toast.LENGTH_SHORT).show();
+                //Toast.makeText(getActivity(), "到这了", Toast.LENGTH_SHORT).show();
                 mBtnLogin.setText(getActivity().getResources().getString(R.string.unlogin));
             }
         }

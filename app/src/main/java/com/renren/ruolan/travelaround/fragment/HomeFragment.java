@@ -165,11 +165,11 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
         viewpager = (ViewPager) view.findViewById(R.id.id_stickynavlayout_viewpager);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false));
         recyclerView.setItemAnimator(new DefaultItemAnimator());
-        mCityAdapter = new HomeRecommentCityAdapter(getActivity(), mCityListEntities);
-        mCityAdapter.setOnItemClickListener((view1, position) -> {
+        mCityAdapter = new HomeRecommentCityAdapter();
+        mCityAdapter.setOnClickListener((view1, position,data) -> {
                     EventBus.getDefault().post(new
-                            CityIdEvent(mCityListEntities.get(position).getCityId(),
-                            mCityListEntities.get(position).getCityName()));
+                            CityIdEvent(data.getCityId(),
+                            data.getCityName()));
                     mFragmentCallback.changeTabHost(1);
                     //  EventBus.getDefault().post();
                 }
@@ -255,7 +255,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
                             mBannerListEntities = homeData.getResult().getBannerList();
                             mCityListEntities = homeData.getResult().getCityList();
                             if (mCityListEntities.size() > 0) {
-                                mCityAdapter.setDatas(mCityListEntities);
+                                mCityAdapter.setCityListEntities(mCityListEntities);
                             }
                             if (mBannerListEntities.size() > 0) {
                                 List<String> imgBanner = new ArrayList<>();
@@ -350,7 +350,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
                             mBannerListEntities = homeData.getResult().getBannerList();
                             mCityListEntities = homeData.getResult().getCityList();
                             if (mCityListEntities.size() > 0) {
-                                mCityAdapter.setDatas(mCityListEntities);
+                                mCityAdapter.setCityListEntities(mCityListEntities);
                             }
                             if (mBannerListEntities.size() > 0) {
                                 List<String> imgBanner = new ArrayList<>();
