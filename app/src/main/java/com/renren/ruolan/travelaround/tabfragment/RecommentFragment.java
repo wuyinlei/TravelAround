@@ -27,7 +27,6 @@ import com.renren.ruolan.travelaround.constant.HttpUrlPath;
 import com.renren.ruolan.travelaround.entity.HomeTicketBean;
 import com.renren.ruolan.travelaround.entity.HomeTicketBean.ResultEntity.ProductListEntity;
 import com.renren.ruolan.travelaround.event.HomeEvent;
-import com.renren.ruolan.travelaround.ui.SearchResultActivity;
 import com.renren.ruolan.travelaround.widget.dialog.CustomPrograss;
 
 import org.greenrobot.eventbus.EventBus;
@@ -42,11 +41,6 @@ import java.util.List;
 import okhttp3.Call;
 import okhttp3.Response;
 import rx.android.schedulers.AndroidSchedulers;
-
-import static android.R.attr.manageSpaceActivity;
-import static android.R.attr.type;
-import static com.baidu.location.b.g.b;
-import static com.baidu.location.b.g.s;
 
 public class RecommentFragment extends Fragment {
     public static final String TITLE = "title";

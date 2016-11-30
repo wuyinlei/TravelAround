@@ -4,9 +4,12 @@ import android.content.Context;
 
 import com.bumptech.glide.Glide;
 import com.renren.ruolan.travelaround.R;
+import com.renren.ruolan.travelaround.base.BaseMoreViewHolder;
 import com.renren.ruolan.travelaround.base.BaseViewHolder;
 import com.renren.ruolan.travelaround.base.SimpleAdapter;
+import com.renren.ruolan.travelaround.base.SimpleMoreAdapter;
 import com.renren.ruolan.travelaround.entity.SearchDetailInfo;
+import com.renren.ruolan.travelaround.entity.SearchDetailInfo.ResultEntity.ProductListEntity;
 
 import java.util.List;
 
@@ -15,13 +18,13 @@ import java.util.List;
  *
  */
 
-public class SearchDetailAdapter extends SimpleAdapter<SearchDetailInfo.ResultEntity.ProductListEntity> {
-    public SearchDetailAdapter(Context context,  List<SearchDetailInfo.ResultEntity.ProductListEntity> datas) {
+public class SearchDetailAdapter extends SimpleMoreAdapter<ProductListEntity> {
+    public SearchDetailAdapter(Context context,  List<ProductListEntity> datas) {
         super(context, R.layout.activity_search_detail_item_layout, datas);
     }
 
     @Override
-    protected void convert(BaseViewHolder viewHoder, SearchDetailInfo.ResultEntity.ProductListEntity item) {
+    protected void convert(BaseMoreViewHolder viewHoder, ProductListEntity item) {
         Glide.with(context)
                 .load(item.getImageUrl())
                 .asBitmap()

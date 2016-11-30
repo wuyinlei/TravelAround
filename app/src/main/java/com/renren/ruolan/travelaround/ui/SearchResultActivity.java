@@ -16,6 +16,7 @@ import android.widget.Toast;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.lzy.okgo.OkGo;
+import com.lzy.okgo.callback.StringCallback;
 import com.lzy.okgo.convert.StringConvert;
 import com.lzy.okrx.RxAdapter;
 import com.renren.ruolan.travelaround.BaseActivity;
@@ -33,6 +34,8 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
+import okhttp3.Call;
+import okhttp3.Response;
 import rx.android.schedulers.AndroidSchedulers;
 
 public class SearchResultActivity extends BaseActivity {
@@ -70,29 +73,36 @@ public class SearchResultActivity extends BaseActivity {
                 .params("Platform", 1)
                 .params("Key", key)
                 .params("currentPage", currentPage)
-                .getCall(StringConvert.create(), RxAdapter.<String>create())
-                .doOnSubscribe(() -> {
-//                    CustomPrograss.show(SearchResultActivity.this,
-//                            getResources().getString(R.string.loading),
-//                            true, null);
-                })
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(s -> {
-                    CustomPrograss.disMiss();
-                    Type type = new TypeToken<SearchDetailInfo>() {
-                    }.getType();
-                    SearchDetailInfo detailInfo = new Gson().fromJson(s, type);
-                    totalPage = Integer.parseInt(detailInfo.getResult().getTotalPage());
-                    totalSize = detailInfo.getResult().getTotalRecord();
-                    mProductListEntities = detailInfo.getResult().getProductList();
-                    if (mProductListEntities.size() > 0) {
-                        mTvCityName.setText(key);
-                        mTvSearchCount.setText(totalSize);
-                        mSearchDetailAdapter.setDatas(mProductListEntities);
+                .execute(new StringCallback(){
+                    @Override
+                    public void onSuccess(String s, Call call, Response response) {
+                        Type type = new TypeToken<SearchDetailInfo>() {
+                        }.getType();
+                        SearchDetailInfo detailInfo = new Gson().fromJson(s, type);
+                        totalPage = Integer.parseInt(detailInfo.getResult().getTotalPage());
+                        totalSize = detailInfo.getResult().getTotalRecord();
+                        mProductListEntities = detailInfo.getResult().getProductList();
+                        if (mProductListEntities.size() > 0) {
+                            mTvCityName.setText(key);
+                            mTvSearchCount.setText(totalSize);
+                            mSearchDetailAdapter.setDatas(mProductListEntities);
+                        }
                     }
-                }, throwable -> {
-                    CustomPrograss.disMiss();
+
+
                 });
+//                .getCall(StringConvert.create(), RxAdapter.<String>create())
+//                .doOnSubscribe(() -> {
+////                    CustomPrograss.show(SearchResultActivity.this,
+////                            getResources().getString(R.string.loading),
+////                            true, null);
+//                })
+//                .observeOn(AndroidSchedulers.mainThread())
+//                .subscribe(s -> {
+//
+//                }, throwable -> {
+//                    CustomPrograss.disMiss();
+//                });
 
     }
 
@@ -171,25 +181,31 @@ public class SearchResultActivity extends BaseActivity {
                 .params("Platform", 1)
                 .params("Key", key)
                 .params("currentPage", currentPage)
-                .getCall(StringConvert.create(), RxAdapter.<String>create())
-                .doOnSubscribe(() -> {
-
-                })
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(s -> {
-                    Type type = new TypeToken<SearchDetailInfo>() {
-                    }.getType();
-                    SearchDetailInfo detailInfo = new Gson().fromJson(s, type);
-                    totalPage = Integer.parseInt(detailInfo.getResult().getTotalPage());
-                    List<ProductListEntity> productList = detailInfo.getResult().getProductList();
-                    if (productList.size() > 0) {
-                        //mTvCityName.setText(key);
-                        //CustomPrograss.disMiss();
-                        mProductListEntities.addAll(productList);
-                        mSearchDetailAdapter.setDatas(mProductListEntities);
+                .execute(new StringCallback(){
+                    @Override
+                    public void onSuccess(String s, Call call, Response response) {
+                        Type type = new TypeToken<SearchDetailInfo>() {
+                        }.getType();
+                        SearchDetailInfo detailInfo = new Gson().fromJson(s, type);
+                        totalPage = Integer.parseInt(detailInfo.getResult().getTotalPage());
+                        List<ProductListEntity> productList = detailInfo.getResult().getProductList();
+                        if (productList.size() > 0) {
+                            //mTvCityName.setText(key);
+                            //CustomPrograss.disMiss();
+                            mProductListEntities.addAll(productList);
+                            mSearchDetailAdapter.setDatas(mProductListEntities);
+                        }
                     }
-                }, throwable -> {
-                    //CustomPrograss.disMiss();
                 });
+//                .getCall(StringConvert.create(), RxAdapter.<String>create())
+//                .doOnSubscribe(() -> {
+//
+//                })
+//                .observeOn(AndroidSchedulers.mainThread())
+//                .subscribe(s -> {
+//
+//                }, throwable -> {
+//                    //CustomPrograss.disMiss();
+//                });
     }
 }

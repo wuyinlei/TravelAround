@@ -4,8 +4,10 @@ import android.content.Context;
 
 import com.bumptech.glide.Glide;
 import com.renren.ruolan.travelaround.R;
+import com.renren.ruolan.travelaround.base.BaseMoreViewHolder;
 import com.renren.ruolan.travelaround.base.BaseViewHolder;
 import com.renren.ruolan.travelaround.base.SimpleAdapter;
+import com.renren.ruolan.travelaround.base.SimpleMoreAdapter;
 import com.renren.ruolan.travelaround.entity.HomeTicketBean.ResultEntity.ProductListEntity;
 
 import java.util.List;
@@ -14,13 +16,13 @@ import java.util.List;
  * Created by Administrator on 2016/11/16.
  */
 
-public class TabFragmentAdapter extends SimpleAdapter<ProductListEntity> {
+public class TabFragmentAdapter extends SimpleMoreAdapter<ProductListEntity> {
     public TabFragmentAdapter(Context context, List<ProductListEntity> datas) {
         super(context, R.layout.home_fragment_ticket_item_layout, datas);
     }
 
     @Override
-    protected void convert(BaseViewHolder viewHoder, ProductListEntity item) {
+    protected void convert(BaseMoreViewHolder viewHoder, ProductListEntity item) {
         Glide.with(context)
                 .load(item.getImageUrl())
                 .asBitmap()

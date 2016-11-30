@@ -7,11 +7,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-
 import com.renren.ruolan.travelaround.R;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
@@ -21,10 +19,10 @@ import java.util.List;
  *
  */
 
-public abstract class BaseAdapter<T, H extends BaseViewHolder> extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+public abstract class BaseMoreAdapter<T, H extends BaseMoreViewHolder> extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
 
-    protected static final String TAG = BaseAdapter.class.getSimpleName();
+    protected static final String TAG = BaseMoreAdapter.class.getSimpleName();
 
     protected final Context context;
 
@@ -46,44 +44,44 @@ public abstract class BaseAdapter<T, H extends BaseViewHolder> extends RecyclerV
     private OnLongItemClickListener mOnLongItemClickListener = null;
 
     public interface OnLongItemClickListener{
-        void onLongItemClick(View view,int position);
+        void onLongItemClick(View view, int position);
     }
 
 
-    public BaseAdapter(Context context, int layoutResId) {
+    public BaseMoreAdapter(Context context, int layoutResId) {
         this(context, layoutResId, null);
     }
 
 
-    public BaseAdapter(Context context, int layoutResId, List<T> datas) {
+    public BaseMoreAdapter(Context context, int layoutResId, List<T> datas) {
         this.datas = datas == null ? new ArrayList<T>() : datas;
         this.context = context;
         this.layoutResId = layoutResId;
     }
-//
-//    @Override
-//    public int getItemViewType(int position) {
-//        if (position + 1 == getItemCount()) {
-//            return TYPE_FOOTER;
-//        }
-//        return TYPE_NORMAL;
-//    }
+
+    @Override
+    public int getItemViewType(int position) {
+        if (position + 1 == getItemCount()) {
+            return TYPE_FOOTER;
+        }
+        return TYPE_NORMAL;
+    }
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-//        if (viewType == TYPE_FOOTER){
-//            View view = LayoutInflater.from(context).inflate(R.layout.item_foot,parent,false);
-//            return new FooterViewHolder(view);
-//        }
+        if (viewType == TYPE_FOOTER){
+            View view = LayoutInflater.from(context).inflate(R.layout.item_foot,parent,false);
+            return new FooterViewHolder(view);
+        }
         View view = LayoutInflater.from(parent.getContext()).inflate(layoutResId, parent, false);
-        BaseViewHolder vh = new BaseViewHolder(view, mOnItemClickListener,mOnLongItemClickListener);
+        BaseMoreViewHolder vh = new BaseMoreViewHolder(view, mOnItemClickListener,mOnLongItemClickListener);
         return vh;
     }
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder viewHoder, int position) {
-        if (viewHoder instanceof BaseViewHolder) {
-            BaseViewHolder holder = (BaseViewHolder) viewHoder;
+        if (viewHoder instanceof BaseMoreViewHolder) {
+            BaseMoreViewHolder holder = (BaseMoreViewHolder) viewHoder;
             T item = getItem(position);
             convert((H) holder, item);
         }
@@ -93,7 +91,7 @@ public abstract class BaseAdapter<T, H extends BaseViewHolder> extends RecyclerV
     @Override
     public int getItemCount() {
         return datas == null
-                ? 0 : datas.size();
+                ? 0 : datas.size()+1;
     }
 
 
