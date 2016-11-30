@@ -14,6 +14,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
+import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -53,6 +54,7 @@ public class DiscoveryFragment extends Fragment {
     private RecyclerView mRecyclerViewDetail;
     private String cityName;
     private int index = 1;
+    private int totalPage;
 
     private List<Integer> imgUrls = new ArrayList<>();
     private List<TagListEntity> mTagListEntities = new ArrayList<>();
@@ -137,6 +139,7 @@ public class DiscoveryFragment extends Fragment {
                         }.getType();
                         DiscoveryArticleData articleData =
                                 new Gson().fromJson(s, type);
+                        totalPage = Integer.parseInt(articleData.getResult().getTotalPage());
                         mArticleList = articleData.getResult().getArticleList();
                         if (mArticleList != null && mArticleList.size() > 0) {
                             mArticleAdapter.setDatas(mArticleList);
@@ -181,10 +184,17 @@ public class DiscoveryFragment extends Fragment {
                 super.onScrollStateChanged(recyclerView, newState);
                 int lastVisiableItemPosition = mLinearLayoutManager.findLastVisibleItemPosition();
                 if (lastVisiableItemPosition + 1 == mArticleAdapter.getItemCount()) {
-                    CustomPrograss.show(getActivity(),
-                            getActivity().getResources().getString(R.string.loading),
-                            false, null);
-                    new Handler().postDelayed(() -> getLoadMoreData(), 1500);
+//                    CustomPrograss.show(getActivity(),
+//                            getActivity().getResources().getString(R.string.loading),
+//                            true, null);
+                    if (!isLoading) {
+                        isLoading = true;
+                        new Handler().postDelayed(() -> {
+                            getLoadMoreData();
+                            isLoading = false;
+                            mArticleAdapter.notifyItemRemoved(mArticleAdapter.getItemCount());
+                        }, 1500);
+                    }
                 }
             }
 
@@ -196,29 +206,46 @@ public class DiscoveryFragment extends Fragment {
 
     }
 
+    private boolean isLoading;
+
     private void getLoadMoreData() {
 
         index++;
-        OkGo.post(HttpUrlPath.GET_HOME_ARTICLE_LIST)
-                .params("currentPage", index)
-                .params("CityName", cityName)
-                .execute(new StringCallback(){
+        if (index <= totalPage) {
 
-                    @Override
-                    public void onSuccess(String s, Call call, Response response) {
-                        Type type = new TypeToken<DiscoveryArticleData>() {
-                        }.getType();
-                        DiscoveryArticleData articleData =
-                                new Gson().fromJson(s, type);
-                        List<ArticleListBean> articleList = articleData.getResult().getArticleList();
-                        mArticleList.addAll(articleList);
-                        if (mArticleList != null && mArticleList.size() > 0) {
-                            CustomPrograss.disMiss();
-                            mArticleAdapter.setDatas(mArticleList);
+            OkGo.post(HttpUrlPath.GET_HOME_ARTICLE_LIST)
+                    .params("currentPage", index)
+                    .params("CityName", cityName)
+                    .execute(new StringCallback() {
+                        @Override
+                        public void onSuccess(String s, Call call, Response response) {
+                            Type type = new TypeToken<DiscoveryArticleData>() {
+                            }.getType();
+                           // CustomPrograss.disMiss();
+                            DiscoveryArticleData articleData =
+                                    new Gson().fromJson(s, type);
+                            List<ArticleListBean> articleList = articleData.getResult().getArticleList();
+                            mArticleList.addAll(articleList);
+                            if (mArticleList != null && mArticleList.size() > 0) {
+                                mArticleAdapter.setDatas(mArticleList);
+                                mArticleAdapter.notifyItemRemoved(mArticleAdapter.getItemCount());
+                            }
                         }
-                    }
-                });
 
+                        @Override
+                        public void onError(Call call, Response response, Exception e) {
+                            super.onError(call, response, e);
+                            //CustomPrograss.disMiss();
+                            mArticleAdapter.notifyItemRemoved(mArticleAdapter.getItemCount());
+                        }
+                    });
+        } else {
+            mArticleAdapter.notifyItemRemoved(mArticleAdapter.getItemCount());
+            //CustomPrograss.disMiss();
+            Toast.makeText(mActivity, getActivity()
+                            .getResources().getString(R.string.loading_finish),
+                    Toast.LENGTH_SHORT).show();
+        }
 
     }
 }

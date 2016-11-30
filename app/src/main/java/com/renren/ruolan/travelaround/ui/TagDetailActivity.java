@@ -80,10 +80,10 @@ public class TagDetailActivity extends BaseActivity implements SwipeRefreshLayou
         mRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_refresh);
         mRefreshLayout.setColorSchemeColors(Color.YELLOW, Color.RED, Color.BLUE, Color.GREEN);
         //能够模拟进入就刷新
-       // mRefreshLayout.post(() -> mRefreshLayout.setRefreshing(true));
+        // mRefreshLayout.post(() -> mRefreshLayout.setRefreshing(true));
         mRefreshLayout.setOnRefreshListener(this);
         mTvTitle = (TextView) findViewById(R.id.tv_title);
-        if (!TextUtils.isEmpty(title)){
+        if (!TextUtils.isEmpty(title)) {
             mTvTitle.setText(title);
         }
         mRecyclerView = (RecyclerView) findViewById(R.id.recycler_view);
@@ -95,9 +95,9 @@ public class TagDetailActivity extends BaseActivity implements SwipeRefreshLayou
             String Platform = "1";
             String ProductID = mTagDatas.get(position).getProductID();
             Intent intent = new Intent(TagDetailActivity.this, ProductDetailActivity.class);
-            intent.putExtra(Contants.PLATFORM,Platform);
-            intent.putExtra(Contants.PRODUCT_ID,ProductID);
-            intent.putExtra(Contants.CITY_NAME,CityName);
+            intent.putExtra(Contants.PLATFORM, Platform);
+            intent.putExtra(Contants.PRODUCT_ID, ProductID);
+            intent.putExtra(Contants.CITY_NAME, CityName);
             startActivity(intent);
         });
         mRecyclerView.setAdapter(mDetailAdapter);
@@ -107,10 +107,17 @@ public class TagDetailActivity extends BaseActivity implements SwipeRefreshLayou
                 super.onScrollStateChanged(recyclerView, newState);
                 int lastVisiableItemPosition = mLayoutManager.findLastVisibleItemPosition();
                 if (lastVisiableItemPosition + 1 == mDetailAdapter.getItemCount()) {
-                    CustomPrograss.show(TagDetailActivity.this,
-                            getResources().getString(R.string.loading),
-                            false, null);
-                    new Handler().postDelayed(() -> getLoadMoreData(), 1500);
+//                    CustomPrograss.show(TagDetailActivity.this,
+//                            getResources().getString(R.string.loading),
+//                            true, null);
+                    if (!isLoading) {
+                        isLoading = true;
+                        new Handler().postDelayed(() -> {
+                            getLoadMoreData();
+                            isLoading = false;
+                            mDetailAdapter.notifyItemRemoved(mDetailAdapter.getItemCount());
+                        }, 1500);
+                    }
                 }
             }
 
@@ -121,15 +128,17 @@ public class TagDetailActivity extends BaseActivity implements SwipeRefreshLayou
         });
 
 
-
     }
+
+    private boolean isLoading;
 
     private void getLoadMoreData() {
         CurrentPage++;
-        if (CurrentPage >totalPage){
+        if (CurrentPage > totalPage) {
             Toast.makeText(this, getResources()
-                    .getString(R.string.loading_finish),
+                            .getString(R.string.loading_finish),
                     Toast.LENGTH_SHORT).show();
+            mDetailAdapter.notifyItemRemoved(mDetailAdapter.getItemCount());
             return;
         }
         OkGo.post(HttpUrlPath.GET_TAG_DETAIL_INFO)
@@ -138,7 +147,7 @@ public class TagDetailActivity extends BaseActivity implements SwipeRefreshLayou
                 .params("CityName", CityName)
                 .params("ProvinceID", ProvinceID)
                 .params("ClassID", ClassID)
-                .execute(new StringCallback(){
+                .execute(new StringCallback() {
 
                     @Override
                     public void onSuccess(String s, Call call, Response response) {
@@ -149,7 +158,6 @@ public class TagDetailActivity extends BaseActivity implements SwipeRefreshLayou
                         CustomPrograss.disMiss();
                         if (productList.size() > 0 && productList != null) {
                             //mRefreshLayout.setRefreshing(false);
-
 
                             // totalPage = tagData.getResult().getTotalPage();
                             mTagDatas.addAll(productList);
@@ -175,7 +183,7 @@ public class TagDetailActivity extends BaseActivity implements SwipeRefreshLayou
                 .params("CityName", CityName)
                 .params("ProvinceID", ProvinceID)
                 .params("ClassID", ClassID)
-                .execute(new StringCallback(){
+                .execute(new StringCallback() {
 
                     @Override
                     public void onSuccess(String s, Call call, Response response) {

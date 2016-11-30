@@ -25,9 +25,10 @@
             android:layout_centerVertical="true"
             android:id="@+id/tv_title"
             android:maxEms="8"
+            android:maxLines="1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="@dimen/x22"/>
+            android:textSize="@dimen/x18"/>
     </RelativeLayout>
 
     <android.support.v7.widget.RecyclerView

@@ -11,10 +11,12 @@ import android.text.TextWatcher;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -23,6 +25,8 @@ import com.lzy.okgo.convert.StringConvert;
 import com.lzy.okrx.RxAdapter;
 import com.renren.ruolan.travelaround.BaseActivity;
 import com.renren.ruolan.travelaround.R;
+import com.renren.ruolan.travelaround.adapter.CollectAdapter;
+import com.renren.ruolan.travelaround.adapter.MyHistoryAdapter;
 import com.renren.ruolan.travelaround.base.BaseViewHolder;
 import com.renren.ruolan.travelaround.base.SimpleAdapter;
 import com.renren.ruolan.travelaround.constant.HttpUrlPath;
@@ -44,7 +48,9 @@ import cn.bmob.v3.listener.SQLQueryListener;
 import cn.bmob.v3.listener.SaveListener;
 import rx.android.schedulers.AndroidSchedulers;
 
+import static android.R.attr.data;
 import static com.renren.ruolan.travelaround.R.id.et_search;
+import static com.renren.ruolan.travelaround.R.id.view_offset_helper;
 
 
 public class SearchActivity extends BaseActivity {
@@ -156,10 +162,20 @@ public class SearchActivity extends BaseActivity {
                             public View getView(FlowLayout parent, int position, String title) {
                                 TextView tv = (TextView) LayoutInflater.from(SearchActivity.this).inflate(R.layout.tv,
                                         mIdFlowlayout, false);
+                                tv.setTextSize(16);
                                 tv.setText(title);
                                 return tv;
                             }
                         });
+
+                        mIdFlowlayout.setOnTagClickListener((view, position, parent) -> {
+                            String key = titles.get(position);
+                            Intent intent = new Intent(SearchActivity.this,SearchResultActivity.class);
+                            intent.putExtra("key",key);
+                            startActivity(intent);
+                            return true;
+                        });
+
                     }
                 }, throwable -> {
                 });
@@ -184,7 +200,7 @@ public class SearchActivity extends BaseActivity {
                         for (SearchHistory history : list) {
                             serachHistorys.add(history);
                             mTvNone.setVisibility(View.GONE);
-                            mHistoryAdapter.setDatas(serachHistorys);
+                            mHistoryAdapter.setSearchHistories(serachHistorys);
                         }
                     }
                 }
@@ -204,11 +220,10 @@ public class SearchActivity extends BaseActivity {
         mRecyclerViewSearch = (RecyclerView) findViewById(R.id.recycler_view_search);
         mRecyclerViewSearch.setLayoutManager(new LinearLayoutManager(this));
         mRecyclerViewSearch.setItemAnimator(new DefaultItemAnimator());
-        mHistoryAdapter = new MyHistoryAdapter(this, serachHistorys);
+        mHistoryAdapter = new MyHistoryAdapter();
         mRecyclerViewSearch.setAdapter(mHistoryAdapter);
-        mHistoryAdapter.setOnItemClickListener((view, position) -> {
-            SearchHistory history = serachHistorys.get(position);
-            String key = history.searchKey;
+        mHistoryAdapter.setOnItemClick((view, position,data) -> {
+            String key = data.searchKey;
             Intent intent = new Intent(SearchActivity.this,SearchResultActivity.class);
             intent.putExtra("key",key);
             startActivity(intent);
@@ -221,18 +236,6 @@ public class SearchActivity extends BaseActivity {
 
     }
 
-
-    class MyHistoryAdapter extends SimpleAdapter<SearchHistory> {
-
-        public MyHistoryAdapter(Context context, List<SearchHistory> datas) {
-            super(context, R.layout.activity_search_history_item_layout, datas);
-        }
-
-        @Override
-        protected void convert(BaseViewHolder viewHoder, SearchHistory item) {
-            viewHoder.getTextView(R.id.tv_history).setText(item.searchKey);
-        }
-    }
 
 
 }

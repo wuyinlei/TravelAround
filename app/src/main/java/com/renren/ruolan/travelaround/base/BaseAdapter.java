@@ -8,6 +8,8 @@ import android.view.View;
 import android.view.ViewGroup;
 
 
+import com.renren.ruolan.travelaround.R;
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
@@ -30,8 +32,8 @@ public abstract class BaseAdapter<T, H extends BaseViewHolder> extends RecyclerV
 
     public List<T> datas;
 
-//    public static final int TYPE_NORMAL = 1;
-//    private static final int TYPE_FOOTER = 2;
+    public static final int TYPE_NORMAL = 1;
+    private static final int TYPE_FOOTER = 2;
 
     private OnItemClickListener mOnItemClickListener = null;
 
@@ -59,13 +61,20 @@ public abstract class BaseAdapter<T, H extends BaseViewHolder> extends RecyclerV
         this.layoutResId = layoutResId;
     }
 
+    @Override
+    public int getItemViewType(int position) {
+        if (position + 1 == getItemCount()) {
+            return TYPE_FOOTER;
+        }
+        return TYPE_NORMAL;
+    }
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-//        if (viewType == TYPE_FOOTER){
-//            View view = LayoutInflater.from(context).inflate(R.layout.item_foot,parent,false);
-//            return new FooterViewHolder(view);
-//        }
+        if (viewType == TYPE_FOOTER){
+            View view = LayoutInflater.from(context).inflate(R.layout.item_foot,parent,false);
+            return new FooterViewHolder(view);
+        }
         View view = LayoutInflater.from(parent.getContext()).inflate(layoutResId, parent, false);
         BaseViewHolder vh = new BaseViewHolder(view, mOnItemClickListener,mOnLongItemClickListener);
         return vh;
@@ -84,7 +93,7 @@ public abstract class BaseAdapter<T, H extends BaseViewHolder> extends RecyclerV
     @Override
     public int getItemCount() {
         return datas == null
-                ? 0 : datas.size();
+                ? 0 : datas.size()+1;
     }
 
 

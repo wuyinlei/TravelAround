@@ -180,7 +180,7 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
             code = code.substring(1);
         }
 
-        CustomPrograss.show(this,getResources().getString(R.string.loading),false,null);
+        CustomPrograss.show(this,getResources().getString(R.string.loading),true,null);
 
         Intent intent = new Intent(this, RegisterSecondActivity.class);
         intent.putExtra("phone", phone);

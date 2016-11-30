@@ -4,6 +4,7 @@ package com.renren.ruolan.travelaround.fragment;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
@@ -233,7 +234,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
     private void initData() {
 
         CustomPrograss.show(getActivity(),
-                getActivity().getResources().getString(R.string.loading), false, null);
+                getActivity().getResources().getString(R.string.loading), true, null);
 
         OkGo.post(HttpUrlPath.HOME_DATA)
                 .tag(this)
@@ -304,6 +305,11 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
             HomeEvent homeEvent = new HomeEvent(event.cityName, event.mLatitude, event.mLongitude);
             EventBus.getDefault().post(homeEvent);
             initData(event.cityName, event.mLatitude, event.mLongitude);
+
+            new Handler().postDelayed(() -> EventBus.getDefault().post(new
+                    CityIdEvent(mCityListEntities.get(0).getCityId(),
+                    mCityListEntities.get(0).getCityName())),2000);
+
 //            Toast.makeText(getActivity(), "tvAddress:" + event.cityName +
 //                    "  mLatitude:" + event.mLatitude
 //                    + "  mLongitude:" + event.mLongitude, Toast.LENGTH_SHORT).show();

@@ -30,7 +30,6 @@ import org.json.JSONObject;
 import cn.bmob.v3.BmobUser;
 import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.SaveListener;
-import rx.Subscriber;
 
 public class LoginActivity extends BaseActivity implements View.OnClickListener {
 
@@ -102,7 +101,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
         final BmobUser bmobUser = new BmobUser();
         bmobUser.setUsername(name);
         bmobUser.setPassword(pwd);
-        CustomPrograss.show(this,getResources().getString(R.string.loading),false,null);
+        CustomPrograss.show(this,getResources().getString(R.string.loading),true,null);
         bmobUser.login(new SaveListener<MyUser>() {
             @Override
             public void done(MyUser myUser, BmobException e) {
@@ -305,15 +304,15 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
 //                        e.printStackTrace();
 //                    }
 //                }
-                String nickname = null;
-                boolean sex = false;
-                String imgurl = null;
-                String location = null;
+                String nickname;
+                boolean sex;
+                String imgurl;
+                String location;
                 try {
                     Log.d("ruolanmingyue", "response:" + response);
                     nickname = response.getString("nickname");
                     imgurl = response.getString("figureurl_qq_2");
-                    sex = response.getString("gender").equals("男") ? true : false;
+                    sex = response.getString("gender").equals("男");
                     location = response.getString("city");
                     MyUser user = new MyUser();
                     user.setUsername(nickname);

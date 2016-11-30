@@ -34,6 +34,7 @@ import org.greenrobot.eventbus.EventBus;
 
 import java.io.File;
 
+import cn.bmob.v3.BmobUser;
 import cn.bmob.v3.datatype.BmobFile;
 import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.UpdateListener;
@@ -178,11 +179,20 @@ public class UserActivity extends BaseActivity implements View.OnClickListener {
         EventBus.getDefault().unregister(this);
     }
 
+
+
+
+    //返回码
+    private final int RESULT_CODE = 100;
+    //请求码
+    private final int REQUEST_CODE = 101;
+
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.et_img_detail:
-                startActivity(new Intent(this, UpdateUserActivity.class));
+                Intent intent = new Intent(this, UpdateUserActivity.class);
+                startActivityForResult(intent,REQUEST_CODE);
                 break;
             case R.id.user_detail_avatar:
                 showMyDialog();
@@ -311,6 +321,8 @@ public class UserActivity extends BaseActivity implements View.OnClickListener {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 
+        Log.d("onActivityResult", "requestCode : " + requestCode + "   resultCode " + resultCode + " data --- > " + data);
+
         if (resultCode == RESULT_OK) {
             switch (requestCode) {
                 case REQUESTCODE_CAM:  //调用相机
@@ -327,8 +339,10 @@ public class UserActivity extends BaseActivity implements View.OnClickListener {
                         setPicToView(data);
                     }
                     break;
-
             }
+        } else if (requestCode == REQUEST_CODE){
+            mCurrentUser = BmobUser.getCurrentUser(MyUser.class);
+            updateUi(mCurrentUser);
         }
 
 
@@ -357,7 +371,7 @@ public class UserActivity extends BaseActivity implements View.OnClickListener {
 
                 //// TODO: 2016/11/29 需要压缩一下
 
-                CustomPrograss.show(this, getResources().getString(R.string.updating), false, null);
+                CustomPrograss.show(this, getResources().getString(R.string.updating), true, null);
 
                 final BmobFile bmobFile = new BmobFile(new File(path));
                 //Bmob这个上传文件的貌似不成功..........................

@@ -43,6 +43,7 @@ import okhttp3.Call;
 import okhttp3.Response;
 import rx.android.schedulers.AndroidSchedulers;
 
+import static android.R.attr.manageSpaceActivity;
 import static android.R.attr.type;
 import static com.baidu.location.b.g.b;
 import static com.baidu.location.b.g.s;
@@ -211,10 +212,16 @@ public class RecommentFragment extends Fragment {
 
                 int lastVisiableItemPosition = mLayoutManager.findLastVisibleItemPosition();
                 if (lastVisiableItemPosition + 1 == mAdapter.getItemCount()) {
-                    CustomPrograss.show(getActivity(),
-                            getActivity().getResources().getString(R.string.loading),
-                            false, null);
-                    new Handler().postDelayed(() -> getLoadMoreData(), 1500);
+//                    CustomPrograss.show(getActivity(),
+//                            getActivity().getResources().getString(R.string.loading),
+//                            true, null);
+                    if (!isLoading){
+                        isLoading = true;
+                    }
+                    new Handler().postDelayed(() ->{ getLoadMoreData();
+                        isLoading = false;
+                    mAdapter.notifyItemRemoved(mAdapter.getItemCount());
+                    }, 1500);
                 }
             }
 
@@ -225,10 +232,13 @@ public class RecommentFragment extends Fragment {
         });
     }
 
+    boolean isLoading;
+
     private void getLoadMoreData() {
         currentPage++;
         if (currentPage>totalPage){
-            CustomPrograss.disMiss();
+           // CustomPrograss.disMiss();
+            mAdapter.notifyItemRemoved(mAdapter.getItemCount());
             Toast.makeText(getActivity(),
                     getActivity().getResources().getString(R.string.loading_finish),
                     Toast.LENGTH_SHORT).show();

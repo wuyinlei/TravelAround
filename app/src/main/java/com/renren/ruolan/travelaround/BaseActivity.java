@@ -19,6 +19,7 @@ import rx.subscriptions.CompositeSubscription;
 
 /**
  * Created by Administrator on 2016/10/20.
+ *
  */
 
 public abstract class BaseActivity extends AppCompatActivity {
@@ -65,7 +66,7 @@ public abstract class BaseActivity extends AppCompatActivity {
 
     /**
      * 解决Subscription内存泄露问题
-     * @param s
+     * @param s  Subscription
      */
     protected void addSubscription(Subscription s) {
         if (this.mCompositeSubscription == null) {
@@ -94,8 +95,8 @@ public abstract class BaseActivity extends AppCompatActivity {
 
     /**
      * 为子类提供一个权限的请求方法
-     * @param code
-     * @param permissions
+     * @param code  状态码
+     * @param permissions  权限数组
      */
     public void requestPermission(int code ,String... permissions){
         ActivityCompat.requestPermissions(this,permissions,code);

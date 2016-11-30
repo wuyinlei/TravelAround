@@ -1,7 +1,5 @@
 package com.renren.ruolan.travelaround.ui;
 
-import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -13,13 +11,11 @@ import android.widget.TextView;
 import com.renren.ruolan.travelaround.BaseActivity;
 import com.renren.ruolan.travelaround.R;
 import com.renren.ruolan.travelaround.adapter.ProductDetailHotelAdapter;
-import com.renren.ruolan.travelaround.entity.DetailBean;
 import com.renren.ruolan.travelaround.entity.DetailBean.ResultEntity.OptionListEntity;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.baidu.location.b.g.v;
 
 public class ProductMoreActivity extends BaseActivity {
 

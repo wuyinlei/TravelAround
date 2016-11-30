@@ -48,4 +48,7 @@ public class HttpUrlPath {
 
     //点击搜索之后的结果详情 Platform = 1    currentPage = 1   Key = 北京
     public static String GET_SEARCH_DETAIL = BASE_URL+"Search/V1403GetResultList.aspx";
+
+    //如果定位找不到，就使用这个去网址去找
+    public static String GET_LON_AND_LAT = "http://gc.ditu.aliyun.com/geocoding?a=";
 }

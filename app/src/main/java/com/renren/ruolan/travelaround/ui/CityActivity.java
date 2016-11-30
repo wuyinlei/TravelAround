@@ -20,11 +20,18 @@ import com.baidu.mapapi.search.geocode.GeoCodeResult;
 import com.baidu.mapapi.search.geocode.GeoCoder;
 import com.baidu.mapapi.search.geocode.OnGetGeoCoderResultListener;
 import com.baidu.mapapi.search.geocode.ReverseGeoCodeResult;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+import com.lzy.okgo.OkGo;
+import com.lzy.okgo.convert.StringConvert;
+import com.lzy.okrx.RxAdapter;
 import com.renren.ruolan.travelaround.BaseActivity;
 import com.renren.ruolan.travelaround.R;
 import com.renren.ruolan.travelaround.adapter.CityGridViewAdapter;
 import com.renren.ruolan.travelaround.adapter.SortAdapter;
+import com.renren.ruolan.travelaround.constant.HttpUrlPath;
 import com.renren.ruolan.travelaround.db.RegionFunction;
+import com.renren.ruolan.travelaround.entity.ALCity;
 import com.renren.ruolan.travelaround.entity.CityModel;
 import com.renren.ruolan.travelaround.entity.RegionInfo;
 import com.renren.ruolan.travelaround.event.LocationEvent;
@@ -36,10 +43,16 @@ import com.renren.ruolan.travelaround.widget.city.SideBar;
 
 import org.greenrobot.eventbus.EventBus;
 
+import java.lang.reflect.Type;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+
+import rx.android.schedulers.AndroidSchedulers;
+
+import static com.baidu.location.b.g.a;
+import static com.baidu.location.b.g.s;
 
 public class CityActivity extends BaseActivity implements OnGetGeoCoderResultListener {
     private List<RegionInfo> countyList;//用于存放县一级的城市名
@@ -153,15 +166,7 @@ public class CityActivity extends BaseActivity implements OnGetGeoCoderResultLis
             if (cityName1 != null && cityName1.length() > 0) {
                 // Toast.makeText(CityActivity.this, cityName12, Toast.LENGTH_SHORT).show();
                 KeyBoard.closeSoftKeyboard(CityActivity.this);
-                boolean isLocation = mSearch.geocode(new GeoCodeOption().city(cityName1).address(cityName1));
-                if (isLocation) {
-                    isFind = true;
-
-                } else {
-                    Toast.makeText(this,
-                            getResources().getString(R.string.sorry_not_find),
-                            Toast.LENGTH_SHORT).show();
-                }
+                mSearch.geocode(new GeoCodeOption().city(cityName1).address(cityName1));
                 //保存选择的城市
                 //PreferencesUtils.saveCityName(CityActivity.this, cityName12);
 
@@ -209,7 +214,7 @@ public class CityActivity extends BaseActivity implements OnGetGeoCoderResultLis
                 }
 
 
-                  //Intent intent = new Intent();
+                //Intent intent = new Intent();
                 //  setResult(100, intent);
                 //new Handler().postDelayed(() -> finish(), 500);
             }
@@ -344,29 +349,43 @@ public class CityActivity extends BaseActivity implements OnGetGeoCoderResultLis
     @Override
     public void onGetGeoCodeResult(GeoCodeResult result) {
         if (result == null || result.error != SearchResult.ERRORNO.NO_ERROR) {
-            Toast.makeText(this,
-                    getResources().getString(R.string.sorry_not_find), Toast.LENGTH_LONG)
-                    .show();
-            return;
+//            Toast.makeText(this,
+//                    getResources().getString(R.string.sorry_not_find), Toast.LENGTH_LONG)
+//                    .show();
+
+
+            String url = HttpUrlPath.GET_LON_AND_LAT + cityName1;
+
+            OkGo.get(url)
+                    .getCall(StringConvert.create(), RxAdapter.<String>create())
+                    .doOnSubscribe(() -> {
+                    })
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(s -> {
+                        Type type = new TypeToken<ALCity>() {
+                        }.getType();
+                        ALCity alCity = new Gson().fromJson(s, type);
+                        mLatitude = alCity.getLat();
+                        mLongitude = alCity.getLon();
+                    }, throwable -> {
+                    });
+
+            // return;
+        } else {
+            mLatitude = result.getLocation().latitude;
+            BigDecimal la = new BigDecimal(mLatitude);
+            mLatitude = la.setScale(6, BigDecimal.ROUND_HALF_UP).doubleValue();
+            mLongitude = result.getLocation().longitude;
+            BigDecimal lo = new BigDecimal(mLongitude);
+            mLongitude = lo.setScale(6, BigDecimal.ROUND_HALF_UP).doubleValue();
+
         }
-        mLatitude = result.getLocation().latitude;
-        BigDecimal la = new BigDecimal(mLatitude);
-        mLatitude = la.setScale(6, BigDecimal.ROUND_HALF_UP).doubleValue();
-        mLongitude = result.getLocation().longitude;
-        BigDecimal lo = new BigDecimal(mLongitude);
-        mLongitude = lo.setScale(6, BigDecimal.ROUND_HALF_UP).doubleValue();
+        EventBus.getDefault().post(new LocationEvent(cityName1, mLatitude, mLongitude));
+        PreferencesUtils.saveCityName(CityActivity.this, cityName1);
+        Intent intent = new Intent();
+        setResult(100, intent); //返回数据
+        finish();
 
-        if (isFind) {
-
-            EventBus.getDefault().post(new LocationEvent(cityName1, mLatitude, mLongitude));
-            PreferencesUtils.saveCityName(CityActivity.this, cityName1);
-            Intent intent = new Intent();
-            setResult(100, intent); //返回数据
-            finish();
-            //  new Handler().postDelayed(() -> finish(), 500);
-            isFind = false;
-
-        }
         Log.d(TAG, "mLatitude:" + mLatitude +
                 " mLongitude:" + mLongitude);
         // Toast.makeText(this, "mLatitude:" + mLatitude +

@@ -1,6 +1,7 @@
 package com.renren.ruolan.travelaround.ui;
 
 import android.content.Intent;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
@@ -9,12 +10,10 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.Toast;
 
-import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.renren.ruolan.travelaround.BaseActivity;
 import com.renren.ruolan.travelaround.R;
 import com.renren.ruolan.travelaround.adapter.CollectAdapter;
-import com.renren.ruolan.travelaround.base.BaseAdapter;
 import com.renren.ruolan.travelaround.constant.Contants;
 import com.renren.ruolan.travelaround.entity.CollectData;
 import com.renren.ruolan.travelaround.entity.MyUser;
@@ -29,7 +28,6 @@ import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.SQLQueryListener;
 import cn.bmob.v3.listener.UpdateListener;
 
-import static com.baidu.location.f.mC;
 
 
 public class CollectActivity extends BaseActivity {
@@ -63,7 +61,8 @@ public class CollectActivity extends BaseActivity {
                     List<CollectData> list = bmobQueryResult.getResults();
                     if (list != null && list.size() > 0) {
                         mCollectDatas = list;
-                        mCollectAdapter.setDatas(mCollectDatas);
+                        mCollectAdapter.setCollectDatas(mCollectDatas);
+
                     } else {
                         Toast.makeText(CollectActivity.this,
                                 getResources().getString(R.string.collect_null),
@@ -77,15 +76,32 @@ public class CollectActivity extends BaseActivity {
     @Override
     public void initView() {
         mImgBack = (ImageView) findViewById(R.id.img_back);
-        mImgBack.setOnClickListener(v -> finish());
+        mImgBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                finish();
+            }
+        });
+
+        mMyUser = BmobUser.getCurrentUser(MyUser.class);
         mRecyclerView = (RecyclerView) findViewById(R.id.recycler_view);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
-        mCollectAdapter = new CollectAdapter(this, mCollectDatas);
+        mCollectAdapter = new CollectAdapter();
         mRecyclerView.setAdapter(mCollectAdapter);
 
+        mCollectAdapter.setOnItemClick((view, position, data) -> {
+            String Platform = "1";
+            String ProductID = mCollectDatas.get(position).getProductID();
+            Intent intent = new Intent(CollectActivity.this, ProductDetailActivity.class);
+            intent.putExtra(Contants.PLATFORM, Platform);
+            intent.putExtra(Contants.PRODUCT_ID, ProductID);
+            intent.putExtra(Contants.CITY_NAME, data.getCityName());
+            startActivity(intent);
+        });
+
         //单击逻辑
-        mCollectAdapter.setOnItemClickListener((view, position) -> {
+        mCollectAdapter.setOnItemClick((view, position,m) -> {
             String Platform = "1";
             String ProductID = mCollectDatas.get(position).getProductID();
             Intent intent = new Intent(this, ProductDetailActivity.class);
@@ -96,49 +112,56 @@ public class CollectActivity extends BaseActivity {
         });
 
         //长按删除逻辑
-        mCollectAdapter.setOnLongItemClickListener((view, position) -> new MaterialDialog.Builder(CollectActivity.this)
-                .title(R.string.tip)
-                .content(R.string.delete_is_or_not)
-                .positiveText(R.string.ok)
-                .negativeText(R.string.cancek)
-                .onPositive((dialog, which) -> {
-                    CollectData collectData = mCollectDatas.get(position);
-                    // TODO: 2016/11/27 删除收藏逻辑
-                    String sql = "select * from CollectData where ProductID = ?";
-                    new BmobQuery<CollectData>().doSQLQuery(sql,new SQLQueryListener<CollectData>() {
-                        @Override
-                        public void done(BmobQueryResult<CollectData> bmobQueryResult, BmobException e) {
-                            if (e == null) {
-                                List<CollectData> results = bmobQueryResult.getResults();
-                                if (results != null) {
-                                    CollectData data = results.get(0);
-                                    String objectId = data.getObjectId();
-                                    CollectData data1 = new CollectData();
-                                    data1.setObjectId(objectId);
-                                    data1.delete(new UpdateListener() {
-                                        @Override
-                                        public void done(BmobException e) {
-                                            if (e == null){
-                                                initData();
-                                               // mCollectAdapter.removeItem(position);
-                                                //mCollectDatas.remove(position);
-                                                //mCollectAdapter.notifyItemRemoved(position);
-                                                //mCollectAdapter.notifyDataSetChanged();
-                                                dialog.dismiss();
-                                            } else {
-                                                dialog.dismiss();
-                                            }
+        mCollectAdapter.setOnLongItemClick(new CollectAdapter.OnLongItemClick() {
+            @Override
+            public void onLongItemClickListener(View view, int position, CollectData data) {
+                new MaterialDialog.Builder(CollectActivity.this)
+                        .title(R.string.tip)
+                        .content(R.string.delete_is_or_not)
+                        .positiveText(R.string.ok)
+                        .negativeText(R.string.cancek)
+                        .onPositive((dialog, which) -> {
+                            CollectData collectData = mCollectDatas.get(position);
+                            // TODO: 2016/11/27 删除收藏逻辑
+                            String sql = "select * from CollectData where ProductID = ?";
+                            new BmobQuery<CollectData>().doSQLQuery(sql,new SQLQueryListener<CollectData>() {
+                                @Override
+                                public void done(BmobQueryResult<CollectData> bmobQueryResult, BmobException e) {
+                                    if (e == null) {
+                                        List<CollectData> results = bmobQueryResult.getResults();
+                                        if (results != null) {
+                                            CollectData data = results.get(0);
+                                            String objectId = data.getObjectId();
+                                            CollectData data1 = new CollectData();
+                                            data1.setObjectId(objectId);
+                                            data1.delete(new UpdateListener() {
+                                                @Override
+                                                public void done(BmobException e) {
+                                                    if (e == null){
+                                                        initData();
+                                                        // mCollectAdapter.removeItem(position);
+                                                        //mCollectDatas.remove(position);
+                                                        //mCollectAdapter.notifyItemRemoved(position);
+                                                        //mCollectAdapter.notifyDataSetChanged();
+                                                        dialog.dismiss();
+                                                    } else {
+                                                        dialog.dismiss();
+                                                    }
+                                                }
+                                            });
+
                                         }
-                                    });
-
+                                    }
                                 }
-                            }
-                        }
-                    },collectData.getProductID());
+                            },collectData.getProductID());
 
 
-                }).onNegative((dialog, which) -> dialog.dismiss()).show());
+                        }).onNegative((dialog, which) -> dialog.dismiss()).show();
 
-        mMyUser = BmobUser.getCurrentUser(MyUser.class);
+                mMyUser = BmobUser.getCurrentUser(MyUser.class);
+            }
+        });
+
+
     }
 }

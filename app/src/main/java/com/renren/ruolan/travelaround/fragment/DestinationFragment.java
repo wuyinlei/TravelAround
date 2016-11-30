@@ -8,6 +8,7 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,6 +26,8 @@ import com.renren.ruolan.travelaround.constant.HttpUrlPath;
 import com.renren.ruolan.travelaround.entity.SelefHotelData;
 import com.renren.ruolan.travelaround.entity.SelefHotelData.ResultEntity.ProductListEntity;
 import com.renren.ruolan.travelaround.event.CityIdEvent;
+import com.renren.ruolan.travelaround.event.HomeEvent;
+import com.renren.ruolan.travelaround.event.LocationEvent;
 import com.renren.ruolan.travelaround.ui.ProductDetailActivity;
 
 import org.greenrobot.eventbus.EventBus;
@@ -169,6 +172,8 @@ public class DestinationFragment extends Fragment {
 
 
     }
+
+
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void CityEvent(CityIdEvent event) {

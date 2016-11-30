@@ -78,7 +78,7 @@ public class IndividualityActivity extends BaseActivity implements View.OnClickL
                     PreferencesUtils.saveSlognName(IndividualityActivity.this, slognName);
                     Intent intent = new Intent();
                     setResult(100, intent);
-                    new Handler().postDelayed(() -> finish(), 500);
+                    new Handler().postDelayed(this::finish, 500);
                 }
                 break;
         }

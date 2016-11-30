@@ -1,6 +1,7 @@
 package com.renren.ruolan.travelaround.ui;
 
 import android.content.Intent;
+import android.os.Handler;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.EditText;
@@ -207,6 +208,10 @@ public class UpdateUserActivity extends BaseActivity implements View.OnClickList
                 if (e == null) {
                     CustomPrograss.disMiss();
 
+                    Intent intent = new Intent();
+                    setResult(100, intent); //返回数据
+
+                    new Handler().postDelayed(() -> finish(), 500);
 
                 }
             }
