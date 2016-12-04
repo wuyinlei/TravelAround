@@ -90,10 +90,12 @@ public class RecommentFragment extends Fragment {
 
         requestUrl = HttpUrlPath.BASE_URL + "Home"+File.separator+"V20"+File.separator+ urls[index];
         Log.d("RecommentFragment", requestUrl);
+
+        initView(view);
+
         cityName = getActivity().getResources().getString(R.string.beijing);
         mLatitude = 39.961256; //后期可以在开始的时候获取到经纬度  然后传递
         mLongitude = 116.461873;
-        initView(view);
         initData();
 
 //        mRecyclerView.setAdapter(new CommonAdapter<String>(getActivity(), R.layout.item, mDatas)

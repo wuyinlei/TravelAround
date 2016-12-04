@@ -10,6 +10,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.renren.ruolan.travelaround.BaseActivity;
 import com.renren.ruolan.travelaround.R;
@@ -156,7 +157,12 @@ public class CollectActivity extends BaseActivity {
                             },collectData.getProductID());
 
 
-                        }).onNegative((dialog, which) -> dialog.dismiss()).show();
+                        }).onNegative(new MaterialDialog.SingleButtonCallback() {
+                    @Override
+                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                        dialog.dismiss();
+                    }
+                }).show();
 
                 mMyUser = BmobUser.getCurrentUser(MyUser.class);
             }
