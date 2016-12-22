@@ -7,6 +7,7 @@ import android.support.v4.view.ViewCompat;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
@@ -138,45 +139,48 @@ public class ProductDetailActivity extends BaseActivity implements View.OnClickL
                 .params("Platform", Platform)
                 .params("ProductID", ProductID)
                 .params("CityName", CityName)
-                .getCall(StringConvert.create(), RxAdapter.<String>create())
-                .doOnSubscribe(() -> {
-                })
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(s -> {
-                    Type type = new TypeToken<DetailBean>() {
-                    }.getType();
-                    DetailBean bean = new Gson().fromJson(s, type);
-                    if (bean.getStatus().equals("0")) {
-                        mResultEntities = bean.getResult();
-                        if (mResultEntities != null) {
-                            mActivityProduct.setVisibility(View.VISIBLE);
+                .execute(new StringCallback(){
+                    @Override
+                    public void onSuccess(String s, Call call, Response response) {
+                        Type type = new TypeToken<DetailBean>() {
+                        }.getType();
+                        DetailBean bean = new Gson().fromJson(s, type);
+                        if (bean.getStatus().equals("0")) {
+                            mResultEntities = bean.getResult();
+                            if (mResultEntities != null) {
+                                mActivityProduct.setVisibility(View.VISIBLE);
 
-                            CustomPrograss.disMiss();
+                                CustomPrograss.disMiss();
 
-                            mImageLists = mResultEntities.getImgList();
-                            //设置图片
-                            setData();
+                                mImageLists = mResultEntities.getImgList();
+                                //设置图片
+                                setData();
 
-                            setHotelData();
+                                setHotelData();
 
-                            setCmtInfo();
+                                setCmtInfo();
 
-                            mTvName.setText(mResultEntities.getTitle());
-                            mTvDes.setText(mResultEntities.getProName());
+                                mTvName.setText(mResultEntities.getTitle());
+                                mTvDes.setText(mResultEntities.getProName());
 
-                            if (mResultEntities.getTraffic() != null) {
-                                mEtv.setContent(mResultEntities.getTraffic());
-                                mEtv.setMinVisibleLines(5);
-                                mEtv.setContentTextSize(15);
-                                mEtv.setTitleTextSize(16);
-                                mEtv.setHintTextSize(12);
-                                mEtv.setHintTextColor(Color.parseColor("#913242"));
+                                if (!TextUtils.isEmpty(mResultEntities.getTraffic())) {
+                                    mEtv.setContent(mResultEntities.getTraffic());
+                                    mEtv.setMinVisibleLines(5);
+                                    mEtv.setContentTextSize(15);
+                                    mEtv.setTitleTextSize(16);
+                                    mEtv.setHintTextSize(12);
+                                    mEtv.setHintTextColor(Color.parseColor("#913242"));
+                                }
+
                             }
-
                         }
                     }
-                }, throwable -> {
                 });
+//                .observeOn(AndroidSchedulers.mainThread())
+//                .subscribe(s -> {
+//
+//                }, throwable -> {
+//                });
 
         String bgl = "select * from CollectData where ProductID = ?";
         new BmobQuery<CollectData>().doSQLQuery(bgl, new SQLQueryListener<CollectData>() {
@@ -331,9 +335,16 @@ public class ProductDetailActivity extends BaseActivity implements View.OnClickL
         mTvAddress = (TextView) findViewById(R.id.tv_address);
         mUserCenterOrderLeft = (ImageView) findViewById(R.id.user_center_order_left);
         mHotRecyclerView = (RecyclerView) findViewById(R.id.hot_recycler_view);
+        mEtv = (ExpandTextView) findViewById(R.id.etv);
 
         //热门商品  旅馆
-        mHotRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        LinearLayoutManager layout0 = new LinearLayoutManager(this,LinearLayoutManager.VERTICAL,false){
+            @Override
+            public boolean canScrollVertically() {
+                return false;
+            }
+        };
+        mHotRecyclerView.setLayoutManager(layout0);
         mHotRecyclerView.setItemAnimator(new DefaultItemAnimator());
         mHotelAdapter = new ProductDetailHotelAdapter(this, mOptionListEntitiesViews);
         mHotRecyclerView.setAdapter(mHotelAdapter);
@@ -343,7 +354,13 @@ public class ProductDetailActivity extends BaseActivity implements View.OnClickL
 
         //放假须知
         mHolidayRecyclerView = (RecyclerView) findViewById(R.id.holiday_recycler_view);
-        mHolidayRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        LinearLayoutManager layout1 = new LinearLayoutManager(this,LinearLayoutManager.VERTICAL,false){
+            @Override
+            public boolean canScrollVertically() {
+                return false;
+            }
+        };
+        mHolidayRecyclerView.setLayoutManager(layout1);
         mHolidayRecyclerView.setItemAnimator(new DefaultItemAnimator());
         mHolidayAdapter = new ProductDetailHolidayAdapter(this, mOtherInfoEntities);
         mHolidayRecyclerView.setAdapter(mHolidayAdapter);
@@ -352,7 +369,13 @@ public class ProductDetailActivity extends BaseActivity implements View.OnClickL
         mUserComment = (ImageView) findViewById(R.id.user_comment);
 
         mDetailRecyclerView = (RecyclerView) findViewById(R.id.detail_recycler_view);
-        mDetailRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        LinearLayoutManager layout2 = new LinearLayoutManager(this,LinearLayoutManager.VERTICAL,false){
+            @Override
+            public boolean canScrollVertically() {
+                return false;
+            }
+        };
+        mDetailRecyclerView.setLayoutManager(layout2);
         mDetailRecyclerView.setItemAnimator(new DefaultItemAnimator());
         mMoreDataAdapter = new ProductDetailMoreDataAdapter(this, mDetailListEntities);
         mDetailRecyclerView.setAdapter(mMoreDataAdapter);
@@ -369,7 +392,13 @@ public class ProductDetailActivity extends BaseActivity implements View.OnClickL
         mReComment = (RelativeLayout) findViewById(R.id.re_comment);
         mReAddComment = (RelativeLayout) findViewById(R.id.re_add_comment);
         mCommentRecyclerView = (RecyclerView) findViewById(R.id.comment_recycler_view);
-        mCommentRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        LinearLayoutManager layout3 = new LinearLayoutManager(this,LinearLayoutManager.VERTICAL,false){
+            @Override
+            public boolean canScrollVertically() {
+                return false;
+            }
+        };
+        mCommentRecyclerView.setLayoutManager(layout3);
         mCommentRecyclerView.setItemAnimator(new DefaultItemAnimator());
         mProductCmtAdapter = new ProductCmtAdapter(this, mCmtListEntities);
         mCommentRecyclerView.setAdapter(mProductCmtAdapter);

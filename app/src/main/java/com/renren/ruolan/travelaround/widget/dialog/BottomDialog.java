@@ -133,4 +133,5 @@ public class BottomDialog extends BaseBottomDialog {
         show(mFragmentManager);
         return this;
     }
+
 }

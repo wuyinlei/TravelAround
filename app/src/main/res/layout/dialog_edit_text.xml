@@ -13,7 +13,7 @@
             android:background="@drawable/dialog_top"
             android:layout_margin="10dp"
             >
-        <EditText
+        <com.renren.ruolan.travelaround.widget.MyEditText
                 android:id="@+id/edit_text"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"

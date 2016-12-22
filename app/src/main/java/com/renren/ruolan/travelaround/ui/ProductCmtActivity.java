@@ -7,6 +7,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.KeyEvent;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
@@ -34,6 +35,7 @@ import com.renren.ruolan.travelaround.entity.DetailBean;
 import com.renren.ruolan.travelaround.entity.MyUser;
 import com.renren.ruolan.travelaround.entity.ProductCmtData;
 import com.renren.ruolan.travelaround.entity.ProductCmtData.ResultEntity.CommentListEntity;
+import com.renren.ruolan.travelaround.widget.MyEditText;
 import com.renren.ruolan.travelaround.widget.dialog.BottomDialog;
 import com.renren.ruolan.travelaround.widget.dialog.EditTextDialog;
 
@@ -153,6 +155,7 @@ public class ProductCmtActivity extends BaseActivity implements View.OnClickList
 
     }
 
+
     private void requestCmt() {
         String bql = "select * from CmtInfo where productID = ?"; //查询所有评论记录
         new BmobQuery<CmtInfo>().doSQLQuery(bql,
@@ -218,75 +221,100 @@ public class ProductCmtActivity extends BaseActivity implements View.OnClickList
      */
     private void addComment(View view) {
         mBottomDialog = BottomDialog.create(getSupportFragmentManager())
-                .setViewListener(v1 -> initView(v1)).setLayoutRes(R.layout.dialog_edit_text)
+                .setViewListener(new BottomDialog.ViewListener() {
+                    @Override
+                    public void bindView(View v) {
+                        initView(v);
+                    }
+                }).setLayoutRes(R.layout.dialog_edit_text)
+                // .setViewListener(v1 -> ).setLayoutRes(R.layout.dialog_edit_text)
                 .setDimAmount(0.5f)
                 .setTag("BottomDialog");
         mBottomDialog.show();
 
     }
+    
 
-//    @Override
-//    public boolean onKeyDown(int keyCode, KeyEvent event) {
-//        if (keyCode == KeyEvent.KEYCODE_BACK) {
-//            mBottomDialog.dismiss();
-//        }
-//        return false;
-//    }
+    @Override
+    public boolean dispatchKeyEvent(KeyEvent event) {
+        if (mBottomDialog != null) {
+            if (event.getKeyCode() == KeyEvent.KEYCODE_BACK
+                    && event.getAction() == KeyEvent.ACTION_DOWN) {  //有软键盘时: onBackPressed,onKeyDown都无效
+                //do something.......
+                if (mBottomDialog != null) {
+                    mBottomDialog.dismiss();
+                    mBottomDialog = null;
+                }
+                return true;
+            }
+        }
+        return super.dispatchKeyEvent(event);
+    }
 
     private TextView mBtnSend;
-    private EditText mEditText;
+    private MyEditText mEditText;
 
     private void initView(View v) {
         mBtnSend = (TextView) v.findViewById(R.id.btn_reSend);
-        mEditText = (EditText) v.findViewById(R.id.edit_text);
-        mEditText.post(() -> {
-            InputMethodManager imm =
-                    (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-            imm.showSoftInput(mEditText, 0);
-        });
-
-        mBtnSend.setOnClickListener(view -> {
-            String content = mEditText.getText().toString();
-            if (!TextUtils.isEmpty(content)) {
-                //
-                Calendar c = Calendar.getInstance();
-                String hour = String.valueOf(c.get(Calendar.HOUR_OF_DAY));
-                String minute = String.valueOf(c.get(Calendar.MINUTE));
-                String second = String.valueOf(c.get(Calendar.SECOND));
-                String commentID = hour + minute + second;  //构造唯一标识
-                CmtInfo cmtInfo = new CmtInfo();
-                String imgurl = mMyUser.getImgurl();
-                String username = mMyUser.getUsername();
-                Date date = new Date();
-                SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm");
-                String time = format.format(date);
-                cmtInfo.setProductID(ProductID);
-                cmtInfo.setCommentDate(time);
-                cmtInfo.setCommentID(commentID);
-                cmtInfo.setContent(content);
-                cmtInfo.setUserImage(imgurl);
-                cmtInfo.setUserName(username);
-
-                cmtInfo.save(new SaveListener<String>() {
-                    @Override
-                    public void done(String s, BmobException e) {
-                        if (e == null){
-                            mBottomDialog.dismiss();
-                            Toast.makeText(ProductCmtActivity.this,
-                                    getResources().getString(R.string.comment_success),
-                                    Toast.LENGTH_SHORT).show();
-                           // requestCmt();
-                            mCmtInfos.add(mCmtInfos.size(),cmtInfo);
-                            mCmtDetailAdapter.setDatas(mCmtInfos);
-                            //mCmtDetailAdapter.notifyDataSetChanged();
-                        }
-                    }
-                });
-
-            } else {
-                Toast.makeText(this, getResources()
-                        .getString(R.string.comment_empty), Toast.LENGTH_SHORT).show();
+        mEditText = (MyEditText) v.findViewById(R.id.edit_text);
+        mEditText.post(new Runnable() {
+            @Override
+            public void run() {
+                InputMethodManager imm =
+                        (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.showSoftInput(mEditText, 0);
             }
         });
+
+
+        mBtnSend.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String content = mEditText.getText().toString();
+                if (!TextUtils.isEmpty(content)) {
+                    //
+                    Calendar c = Calendar.getInstance();
+                    String hour = String.valueOf(c.get(Calendar.HOUR_OF_DAY));
+                    String minute = String.valueOf(c.get(Calendar.MINUTE));
+                    String second = String.valueOf(c.get(Calendar.SECOND));
+                    String commentID = hour + minute + second;  //构造唯一标识
+                    CmtInfo cmtInfo = new CmtInfo();
+                    String imgurl = mMyUser.getImgurl();
+                    String username = mMyUser.getUsername();
+                    Date date = new Date();
+                    SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+                    String time = format.format(date);
+                    cmtInfo.setProductID(ProductID);
+                    cmtInfo.setCommentDate(time);
+                    cmtInfo.setCommentID(commentID);
+                    cmtInfo.setContent(content);
+                    cmtInfo.setUserImage(imgurl);
+                    cmtInfo.setUserName(username);
+
+                    cmtInfo.save(new SaveListener<String>() {
+                        @Override
+                        public void done(String s, BmobException e) {
+                            if (e == null) {
+                                mBottomDialog.dismiss();
+                                Toast.makeText(ProductCmtActivity.this,
+                                        getResources().getString(R.string.comment_success),
+                                        Toast.LENGTH_SHORT).show();
+                                // requestCmt();
+                                mCmtInfos.add(mCmtInfos.size(), cmtInfo);
+                                mCmtDetailAdapter.setDatas(mCmtInfos);
+                                //mCmtDetailAdapter.notifyDataSetChanged();
+                            }
+                        }
+                    });
+
+                } else {
+                    Toast.makeText(ProductCmtActivity.this, getResources()
+                            .getString(R.string.comment_empty), Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+//        mBtnSend.setOnClickListener(view -> {
+//
+//        });
     }
 }
