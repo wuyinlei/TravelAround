@@ -233,7 +233,7 @@ public class ProductCmtActivity extends BaseActivity implements View.OnClickList
         mBottomDialog.show();
 
     }
-    
+
 
     @Override
     public boolean dispatchKeyEvent(KeyEvent event) {
@@ -263,6 +263,19 @@ public class ProductCmtActivity extends BaseActivity implements View.OnClickList
                 InputMethodManager imm =
                         (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
                 imm.showSoftInput(mEditText, 0);
+            }
+        });
+
+        /**
+         * 这个方法会在按下back键的时候出发
+         */
+        mEditText.setOnCancelDialogImp(new MyEditText.OnCancelDialogImp() {
+            @Override
+            public void onCancelDialog() {
+                if (mBottomDialog != null) {
+                    mBottomDialog.dismiss();
+                    mBottomDialog = null;
+                }
             }
         });
 
