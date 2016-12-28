@@ -227,16 +227,13 @@ public class MineFragment extends Fragment implements View.OnClickListener {
                 Glide.with(getActivity())
                         .load(event.mMyUser.getImgurl())
                         .asBitmap().into(mUserImg);
-                isUnLogin = false;
-                mMyUser = event.mMyUser;
-                //Toast.makeText(getActivity(), "到这了", Toast.LENGTH_SHORT).show();
-                mBtnLogin.setText(getActivity().getResources().getString(R.string.unlogin));
             }
+            isUnLogin = false;
+            mMyUser = event.mMyUser;
+            //Toast.makeText(getActivity(), "到这了", Toast.LENGTH_SHORT).show();
+            mBtnLogin.setText(getActivity().getResources().getString(R.string.unlogin));
         }
     }
-
-
-
 
 
     @Override

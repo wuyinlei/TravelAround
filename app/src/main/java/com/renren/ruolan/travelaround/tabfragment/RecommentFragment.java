@@ -73,7 +73,7 @@ public class RecommentFragment extends Fragment {
         EventBus.getDefault().register(this);
     }
 
-    String requestUrl = HttpUrlPath.BASE_URL+"V2101Index2.aspx";
+    String requestUrl = HttpUrlPath.BASE_URL + "V2101Index2.aspx";
 
     public static RecommentFragment newInstance(int title) {
         RecommentFragment tabFragment = new RecommentFragment();
@@ -88,7 +88,7 @@ public class RecommentFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_tab, container, false);
 
-        requestUrl = HttpUrlPath.BASE_URL + "Home"+File.separator+"V20"+File.separator+ urls[index];
+        requestUrl = HttpUrlPath.BASE_URL + "Home" + File.separator + "V20" + File.separator + urls[index];
         Log.d("RecommentFragment", requestUrl);
 
         initView(view);
@@ -119,11 +119,11 @@ public class RecommentFragment extends Fragment {
             mLatitude = event.mLatitude;
             mLongitude = event.mLongitude;
             cityName = event.cityName;
-            initData(event.cityName,event.mLatitude,event.mLongitude);
+            initData(event.cityName, event.mLatitude, event.mLongitude);
 //            Toast.makeText(getActivity(), "tvAddress:" + event.cityName +
 //                    "  mLatitude:" + event.mLatitude
 //                    + "  mLongitude:" + event.mLongitude, Toast.LENGTH_SHORT).show();
-         //   EventBus.getDefault().post(event);
+            //   EventBus.getDefault().post(event);
 
 
         }
@@ -133,9 +133,9 @@ public class RecommentFragment extends Fragment {
         currentPage = 1;
         OkGo.post(requestUrl)
                 .params("CityName", cityName)
-                .params("Latitude",latitude)
-                .params("Longitude",longitude)
-                .params("currentPage",currentPage)
+                .params("Latitude", latitude)
+                .params("Longitude", longitude)
+                .params("currentPage", currentPage)
                 .getCall(StringConvert.create(), RxAdapter.<String>create())
                 .doOnSubscribe(() -> {
                 })
@@ -158,14 +158,13 @@ public class RecommentFragment extends Fragment {
     }
 
 
-
     private void initData() {
         OkGo.post(requestUrl)
                 .params("CityName", cityName)
-                .params("Latitude",mLatitude)
-                .params("Longitude",mLongitude)
-                .params("currentPage",currentPage)
-                .execute(new StringCallback(){
+                .params("Latitude", mLatitude)
+                .params("Longitude", mLongitude)
+                .params("currentPage", currentPage)
+                .execute(new StringCallback() {
 
                     @Override
                     public void onSuccess(String s, Call call, Response response) {
@@ -195,9 +194,9 @@ public class RecommentFragment extends Fragment {
             String Platform = "1";
             String ProductID = mProductListEntities.get(position).getProductID();
             Intent intent = new Intent(getActivity(), ProductDetailActivity.class);
-            intent.putExtra(Contants.PLATFORM,Platform);
-            intent.putExtra(Contants.PRODUCT_ID,ProductID);
-            intent.putExtra(Contants.CITY_NAME,cityName);
+            intent.putExtra(Contants.PLATFORM, Platform);
+            intent.putExtra(Contants.PRODUCT_ID, ProductID);
+            intent.putExtra(Contants.CITY_NAME, cityName);
             startActivity(intent);
         });
         mRecyclerView.setAdapter(mAdapter);
@@ -211,12 +210,13 @@ public class RecommentFragment extends Fragment {
 //                    CustomPrograss.show(getActivity(),
 //                            getActivity().getResources().getString(R.string.loading),
 //                            true, null);
-                    if (!isLoading){
+                    if (!isLoading) {
                         isLoading = true;
                     }
-                    new Handler().postDelayed(() ->{ getLoadMoreData();
+                    new Handler().postDelayed(() -> {
+                        getLoadMoreData();
                         isLoading = false;
-                    mAdapter.notifyItemRemoved(mAdapter.getItemCount());
+                        mAdapter.notifyItemRemoved(mAdapter.getItemCount());
                     }, 1500);
                 }
             }
@@ -232,8 +232,8 @@ public class RecommentFragment extends Fragment {
 
     private void getLoadMoreData() {
         currentPage++;
-        if (currentPage>totalPage){
-           // CustomPrograss.disMiss();
+        if (currentPage > totalPage) {
+            // CustomPrograss.disMiss();
             mAdapter.notifyItemRemoved(mAdapter.getItemCount());
             Toast.makeText(getActivity(),
                     getActivity().getResources().getString(R.string.loading_finish),
@@ -243,10 +243,10 @@ public class RecommentFragment extends Fragment {
 
         OkGo.post(requestUrl)
                 .params("CityName", cityName)
-                .params("Latitude",mLatitude)
-                .params("Longitude",mLongitude)
-                .params("currentPage",currentPage)
-                .execute(new StringCallback(){
+                .params("Latitude", mLatitude)
+                .params("Longitude", mLongitude)
+                .params("currentPage", currentPage)
+                .execute(new StringCallback() {
 
                     @Override
                     public void onSuccess(String s, Call call, Response response) {

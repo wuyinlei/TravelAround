@@ -30,6 +30,7 @@ import org.json.JSONObject;
 import cn.bmob.v3.BmobUser;
 import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.SaveListener;
+import cn.bmob.v3.listener.UpdateListener;
 
 public class LoginActivity extends BaseActivity implements View.OnClickListener {
 
@@ -98,9 +99,11 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
      * @param pwd  密码
      */
     private void toLogin(String name, String pwd) {
-        final BmobUser bmobUser = new BmobUser();
+        final MyUser bmobUser = new MyUser();
         bmobUser.setUsername(name);
         bmobUser.setPassword(pwd);
+       // bmobUser.setImgurl("http://q.qlogo.cn/qqapp/1105704769/8D6EA799DE83CA23ABD0D22C4CDAF304/100");
+
         CustomPrograss.show(this,getResources().getString(R.string.loading),true,null);
         bmobUser.login(new SaveListener<MyUser>() {
             @Override
@@ -125,8 +128,23 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
                         PreferencesUtils.putString(LoginActivity.this, Contants.USER_NAME, name);
                     }
 
-                  //  MyUser myUser = new MyUser();
-                    myUser.setUsername(name);
+//                  //  MyUser myUser = new MyUser();
+//                    myUser.setUsername(name);
+//                    myUser.update(new UpdateListener() {
+//                        @Override
+//                        public void done(BmobException e) {
+//
+//                        }
+//                    });
+                    myUser.setImgurl("http://q.qlogo.cn/qqapp/1105704769/8D6EA799DE83CA23ABD0D22C4CDAF304/100");
+                    myUser.update(myUser.getObjectId(), new UpdateListener() {
+                        @Override
+                        public void done(BmobException e) {
+                            if (e==null){
+                                Toast.makeText(LoginActivity.this, "update userinfo success", Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    });
                     EventBus.getDefault().post(new LoginEvent(myUser));
 
                     Intent intent = new Intent(LoginActivity.this, MainActivity.class);

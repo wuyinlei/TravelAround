@@ -238,7 +238,9 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
 
         OkGo.post(HttpUrlPath.HOME_DATA)
                 .tag(this)
-                .params("CityName", getActivity().getResources().getString(R.string.beijing))
+                .params("CityName", cityName)
+                .params("Latitude", mLatitude)
+                .params("Longitude", mLongitude)
                 .cacheMode(CacheMode.DEFAULT)
                 .execute(new StringCallback() {
                     @Override
