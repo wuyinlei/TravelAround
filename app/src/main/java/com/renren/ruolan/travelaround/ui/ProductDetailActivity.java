@@ -3,6 +3,7 @@ package com.renren.ruolan.travelaround.ui;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
+import android.os.Handler;
 import android.support.v4.view.ViewCompat;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
@@ -17,6 +18,7 @@ import android.widget.Toast;
 
 import com.github.clans.fab.FloatingActionButton;
 import com.google.gson.Gson;
+import com.google.gson.JsonSyntaxException;
 import com.google.gson.reflect.TypeToken;
 import com.hymane.expandtextview.ExpandTextView;
 import com.lzy.okgo.OkGo;
@@ -144,35 +146,49 @@ public class ProductDetailActivity extends BaseActivity implements View.OnClickL
                     public void onSuccess(String s, Call call, Response response) {
                         Type type = new TypeToken<DetailBean>() {
                         }.getType();
-                        DetailBean bean = new Gson().fromJson(s, type);
-                        if (bean.getStatus().equals("0")) {
-                            mResultEntities = bean.getResult();
-                            if (mResultEntities != null) {
-                                mActivityProduct.setVisibility(View.VISIBLE);
+                        try {
+                            DetailBean bean = new Gson().fromJson(s, type);
+                            if (bean.getStatus().equals("0")) {
+                                mResultEntities = bean.getResult();
+                                if (mResultEntities != null) {
+                                    mActivityProduct.setVisibility(View.VISIBLE);
 
-                                CustomPrograss.disMiss();
+                                    CustomPrograss.disMiss();
 
-                                mImageLists = mResultEntities.getImgList();
-                                //设置图片
-                                setData();
+                                    mImageLists = mResultEntities.getImgList();
+                                    //设置图片
+                                    setData();
 
-                                setHotelData();
+                                    setHotelData();
 
-                                setCmtInfo();
+                                    setCmtInfo();
 
-                                mTvName.setText(mResultEntities.getTitle());
-                                mTvDes.setText(mResultEntities.getProName());
+                                    mTvName.setText(mResultEntities.getTitle());
+                                    mTvDes.setText(mResultEntities.getProName());
 
-                                if (!TextUtils.isEmpty(mResultEntities.getTraffic())) {
-                                    mEtv.setContent(mResultEntities.getTraffic());
-                                    mEtv.setMinVisibleLines(5);
-                                    mEtv.setContentTextSize(15);
-                                    mEtv.setTitleTextSize(16);
-                                    mEtv.setHintTextSize(12);
-                                    mEtv.setHintTextColor(Color.parseColor("#913242"));
+                                    if (!TextUtils.isEmpty(mResultEntities.getTraffic())) {
+                                        mEtv.setContent(mResultEntities.getTraffic());
+                                        mEtv.setMinVisibleLines(5);
+                                        mEtv.setContentTextSize(15);
+                                        mEtv.setTitleTextSize(16);
+                                        mEtv.setHintTextSize(12);
+                                        mEtv.setHintTextColor(Color.parseColor("#913242"));
+                                    }
+
                                 }
-
                             }
+                        } catch (JsonSyntaxException e) {
+                            Toast.makeText(ProductDetailActivity.this,
+                                    getResources().getString(R.string.product_has_been_sold_out),
+                                    Toast.LENGTH_SHORT).show();
+                            CustomPrograss.disMiss();
+                            new Handler().postDelayed(new Runnable() {
+                                @Override
+                                public void run() {
+                                    finish();
+                                }
+                            },500);
+                            e.printStackTrace();
                         }
                     }
                 });

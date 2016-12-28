@@ -18,7 +18,6 @@ import java.util.List;
 
 /**
  * Created by Administrator on 2016/10/21.
- *
  */
 
 public abstract class BaseAdapter<T, H extends BaseViewHolder> extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
@@ -45,8 +44,8 @@ public abstract class BaseAdapter<T, H extends BaseViewHolder> extends RecyclerV
 
     private OnLongItemClickListener mOnLongItemClickListener = null;
 
-    public interface OnLongItemClickListener{
-        void onLongItemClick(View view,int position);
+    public interface OnLongItemClickListener {
+        void onLongItemClick(View view, int position);
     }
 
 
@@ -76,7 +75,7 @@ public abstract class BaseAdapter<T, H extends BaseViewHolder> extends RecyclerV
 //            return new FooterViewHolder(view);
 //        }
         View view = LayoutInflater.from(parent.getContext()).inflate(layoutResId, parent, false);
-        BaseViewHolder vh = new BaseViewHolder(view, mOnItemClickListener,mOnLongItemClickListener);
+        BaseViewHolder vh = new BaseViewHolder(view, mOnItemClickListener, mOnLongItemClickListener);
         return vh;
     }
 
@@ -134,9 +133,10 @@ public abstract class BaseAdapter<T, H extends BaseViewHolder> extends RecyclerV
 
     /**
      * 从列表中删除某一项
-     * @param position  位置
+     *
+     * @param position 位置
      */
-    public void removeItem(int position){
+    public void removeItem(int position) {
         datas.remove(position);
         notifyItemRemoved(position);
     }
@@ -150,7 +150,7 @@ public abstract class BaseAdapter<T, H extends BaseViewHolder> extends RecyclerV
 
     public void addData(List<T> datas) {
 
-        addData(0,datas);
+        addData(0, datas);
     }
 
     public void setDatas(List<T> datas) {

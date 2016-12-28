@@ -86,4 +86,6 @@
     <string name="cancel">取消</string>
 
     <string name="not_open">暂时还没开放，敬请期待！！！</string>
+    
+    <string name="product_has_been_sold_out">好遗憾~您来迟咯，该产品已经下架了,正在退出。。。</string>
 </resources>
