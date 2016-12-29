@@ -1,6 +1,7 @@
 package com.renren.ruolan.travelaround.ui;
 
 import android.content.Intent;
+import android.os.Handler;
 import android.text.Html;
 import android.text.TextUtils;
 import android.util.Log;
@@ -30,6 +31,8 @@ import cn.bmob.v3.listener.SaveListener;
 import cn.smssdk.EventHandler;
 import cn.smssdk.SMSSDK;
 import cn.smssdk.utils.SMSLog;
+
+import static com.baidu.location.b.g.P;
 
 public class RegisterSecondActivity extends BaseActivity implements View.OnClickListener {
 
@@ -217,13 +220,26 @@ public class RegisterSecondActivity extends BaseActivity implements View.OnClick
                         startActivity(new Intent(RegisterSecondActivity.this,
                                 LoginActivity.class));
                         CustomPrograss.disMiss();
+                    } else if (e.getErrorCode() == 209){
+
+                        Toast.makeText(RegisterSecondActivity.this,
+                                getResources().getString(R.string.this_phone_has_been_register),
+                                Toast.LENGTH_SHORT).show();
+                        CustomPrograss.disMiss();
+
+
                     } else {
-                        Log.d("RegisterSecondActivity", "e:" + e);
                         //注册失败
                         Toast.makeText(RegisterSecondActivity.this,
                                 getResources().getString(R.string.register_failed),
                                 Toast.LENGTH_SHORT).show();
                         CustomPrograss.disMiss();
+                        new Handler().postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                startActivity(new Intent(RegisterSecondActivity.this,RegisterActivity.class));
+                            }
+                        },1000);
                     }
                 }
             });

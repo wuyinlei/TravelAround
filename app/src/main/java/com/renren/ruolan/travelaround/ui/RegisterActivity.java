@@ -119,11 +119,20 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
                                 throwable.getMessage());
                         String des = object.optString("detail");
                         if (!TextUtils.isEmpty(des)) {
+                            Toast.makeText(RegisterActivity.this, des, Toast.LENGTH_SHORT).show();
+                            //Log.d("RegisterActivity   ", "dfasdf" + des);
+                            mEtPhone.setText("");
+                            mEtPassword.setText("");
+                            mEtPhone.setFocusable(true);
+                            mEtPassword.clearFocus();
+                            CustomPrograss.disMiss();
                             //ToastUtils.show(RegActivity.this, des);
                             return;
                         }
                     } catch (Exception e) {
+                        Log.d("RegisterActivity", "e:" + e);
                         SMSLog.getInstance().w(e);
+                        CustomPrograss.disMiss();
                     }
                 }
 
@@ -180,7 +189,7 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
             code = code.substring(1);
         }
 
-        CustomPrograss.show(this,getResources().getString(R.string.loading),true,null);
+
 
         Intent intent = new Intent(this, RegisterSecondActivity.class);
         intent.putExtra("phone", phone);
@@ -193,6 +202,7 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        //CustomPrograss.disMiss();
     }
 
     @Override
@@ -271,6 +281,7 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
 
             case R.id.tv_next:
                 if (mAgreeUserAgreement.isChecked()) {
+                    CustomPrograss.show(this,getResources().getString(R.string.loading),true,null);
                     getCode();
                 } else {
                     Toast.makeText(this, getResources()

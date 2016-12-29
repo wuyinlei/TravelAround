@@ -52,6 +52,7 @@
 
     <string name="agree_user_argument">请同意用户协议</string>
     <string name="register_failed">注册失败</string>
+    <string name="this_phone_has_been_register">该手机号已经注册过了，请重新注册</string>
     <string name="setting">用户管理</string>
     <string name="collect_failed">收藏成功</string>
     <string name="collect_success">收藏成功</string>
